@@ -12,15 +12,15 @@
             "scaleInDock": 3.4349
         },
         "level1.tmx": {
-            "scale": 1.9943,
+            "scale": 2.6586,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 203.8309181166324,
-                "y": 165.72230857945144
+                "x": 121.68058376589183,
+                "y": 73.53494320318967
             }
         },
         "level1.tmx#Pico-8-Platformer": {
-            "scaleInDock": 3.4349,
+            "scaleInDock": 4.3531,
             "scaleInEditor": 3.7229
         }
     },

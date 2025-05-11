@@ -139,12 +139,12 @@
         {
          "columns":15,
          "firstgid":1,
-         "image":"..\/sprites\/tilemap_packed.png",
-         "imageheight":80,
-         "imagewidth":120,
-         "margin":0,
+         "image":"..\/sprites\/extruded-transparent.png",
+         "imageheight":100,
+         "imagewidth":150,
+         "margin":1,
          "name":"Pico-8-Platformer",
-         "spacing":0,
+         "spacing":2,
          "tilecount":150,
          "tileheight":8,
          "tiles":[

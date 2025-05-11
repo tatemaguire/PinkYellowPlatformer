@@ -3,8 +3,8 @@
  <editorsettings>
   <export target="tilemaps/level1.tmj" format="json"/>
  </editorsettings>
- <tileset firstgid="1" name="Pico-8-Platformer" tilewidth="8" tileheight="8" tilecount="150" columns="15">
-  <image source="sprites/tilemap_packed.png" width="120" height="80"/>
+ <tileset firstgid="1" name="Pico-8-Platformer" tilewidth="8" tileheight="8" spacing="2" margin="1" tilecount="150" columns="15">
+  <image source="sprites/extruded-transparent.png" width="150" height="100"/>
   <tile id="3">
    <properties>
     <property name="collides" type="bool" value="true"/>

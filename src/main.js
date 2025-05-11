@@ -23,13 +23,14 @@ let config = {
         default: 'arcade',
         arcade: {
             debug: true,
+            fps: 400,
             gravity: {
                 x: 0,
                 y: 0
             }
         }
     },
-    width: 160,
+    width: 240,
     height: 160,
     zoom: 4,
     scene: [Load, Level1]

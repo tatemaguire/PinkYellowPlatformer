@@ -1,0 +1,47 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "level1.tmx",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "": {
+            "scaleInDock": 3.4349
+        },
+        "level1.tmx": {
+            "scale": 1.9943,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 203.8309181166324,
+                "y": 165.72230857945144
+            }
+        },
+        "level1.tmx#Pico-8-Platformer": {
+            "scaleInDock": 3.4349,
+            "scaleInEditor": 3.7229
+        }
+    },
+    "last.exportedFilePath": "/Users/tatemaguire/Desktop/cmpm120/PinkYellowPlatformer/assets/tilemaps",
+    "last.imagePath": "/Users/tatemaguire/Desktop/cmpm120/PinkYellowPlatformer/assets/sprites",
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 8,
+    "map.tileWidth": 8,
+    "map.width": 90,
+    "openFiles": [
+        "level1.tmx"
+    ],
+    "project": "Pink Yellow Platformer.tiled-project",
+    "property.type": "bool",
+    "recentFiles": [
+        "level1.tmx"
+    ],
+    "tileset.embedInMap": true,
+    "tileset.tileSize": {
+        "height": 8,
+        "width": 8
+    }
+}

@@ -9,18 +9,19 @@
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "": {
-            "scaleInDock": 3.4349
+            "scaleInDock": 3.4349,
+            "scaleInEditor": 3.7229
         },
         "level1.tmx": {
-            "scale": 2.6586,
-            "selectedLayer": 3,
+            "scale": 3.1182,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 121.68058376589183,
-                "y": 73.53494320318967
+                "x": 109.19761400808157,
+                "y": 63.65852094156887
             }
         },
         "level1.tmx#Pico-8-Platformer": {
-            "scaleInDock": 4.3531,
+            "scaleInDock": 3.4714,
             "scaleInEditor": 3.7229
         }
     },

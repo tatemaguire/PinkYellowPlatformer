@@ -43,9 +43,15 @@ class Player extends Phaser.GameObjects.Sprite {
     update(time, delta) {
         if (this.dying) return;
 
+        // die if at the bottom of the world bounds
         if (this.body.y >= this.scene.physics.world.bounds.bottom - this.displayHeight) {
             this.kill();
             return;
+        }
+
+        // win if at the left of the world bounds
+        if (this.body.x >= this.scene.physics.world.bounds.right - this.displayWidth*2) {
+            this.scene.finishLevel();
         }
 
         // horizontal movement

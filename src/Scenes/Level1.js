@@ -4,6 +4,7 @@ class Level1 extends Phaser.Scene {
         this.my = {};
         this.my.sprite = {};
         this.my.collider = {};
+        this.my.score = 0;
     }
 
     create() {
@@ -18,9 +19,11 @@ class Level1 extends Phaser.Scene {
         // make map layers
         this.my.map = this.add.tilemap('level1-map', 8, 8, 90, 20);
         this.my.tileset = this.my.map.addTilesetImage('Pico-8-Platformer', 'pico-8-platformer', 8, 8, 2, 4);
-        this.my.skyLayer = this.my.map.createLayer('Sky', this.my.tileset, 0, 0);
+        this.my.skyLayer = this.my.map.createLayer('Sky', this.my.tileset, 0, 0).setScrollFactor(0.8);
+        this.my.wallLayer = this.my.map.createLayer('Wall', this.my.tileset, 0, 0);
         this.my.yellowLayer = this.my.map.createLayer('Yellow', this.my.tileset, 0, 0);
         this.my.pinkLayer = this.my.map.createLayer('Pink', this.my.tileset, 0, 0).setVisible(false);
+        this.my.coinLayer = this.my.map.createLayer('Coins', this.my.tileset, 0, 0);
 
         // create world collision
         this.my.yellowLayer.setCollisionByProperty({collides: true});
@@ -46,7 +49,30 @@ class Level1 extends Phaser.Scene {
         this.cameras.main.startFollow(this.my.sprite.player, true, 0.15, 1);
         this.cameras.main.setBounds(0, 0, 90*8, 20*8);
         this.cameras.main.setRoundPixels(true);
+
+        // create coins
+        this.my.coins = this.my.coinLayer.createFromTiles(89, -1);
+        for (let coin of this.my.coins) {
+            coin.setTexture('pico-8-platformer', 88);
+            coin.x += 4;
+            coin.y += 4;
+            this.physics.add.existing(coin, 1);
+        }
+
+        // create coin collision
+        let playerCoinCollide = (player, coin) => {
+            this.my.score++;
+            coin.destroy();
+            this.my.coinText.setText(('00' + this.my.score).slice(-2));
+        }
+        this.my.collider.playerCoin = this.physics.add.overlap(this.my.sprite.player, this.my.coins, playerCoinCollide);
         
+        // create coin count text
+        this.my.coinText = this.add.bitmapText(4, -2, 'mini-square-mono', '00')
+            .setFontSize(16)
+            .setLetterSpacing(0)
+            .setScrollFactor(0);
+
         // debug key listener (assigned to D key)
         this.input.keyboard.on('keydown-D', () => {
             this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
@@ -57,6 +83,10 @@ class Level1 extends Phaser.Scene {
 
     restartLevel() {
         this.scene.start('level1');
+    }
+
+    finishLevel() {
+        console.log("WIN");
     }
     
     update(time, delta) {

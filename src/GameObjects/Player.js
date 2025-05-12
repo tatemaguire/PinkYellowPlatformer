@@ -12,11 +12,12 @@ class Player extends Phaser.GameObjects.Sprite {
         this.zKey = zKey;
 
         // design variables
-        this.ACCELERATION = 300;
+        this.ACCELERATION = 500;
         this.TURN_ACCELERATION = 1000;
         this.DRAG = 1200;
         this.MAX_VELOCITY = 80;
-        this.JUMP_VELOCITY = 200;
+        this.JUMP_VELOCITY = 170;
+        this.JUMP_CANCEL_DECELERATION = 3000;
 
         // set up physics
         this.body.setCollideWorldBounds();
@@ -25,9 +26,28 @@ class Player extends Phaser.GameObjects.Sprite {
         // player rest timer
         this.playerRestTimer = 0;
         this.playerRestStartTime = 2500; // ms, when to start rest animation
+
+        this.dying = false;
+    }
+
+    kill() {
+        if (this.dying) return;
+        this.dying = true;
+        this.body.stop();
+        this.anims.play('die');
+        this.on('animationcomplete-die', () => {
+            this.scene.restartLevel();
+        });
     }
 
     update(time, delta) {
+        if (this.dying) return;
+
+        if (this.body.y >= this.scene.physics.world.bounds.bottom - this.displayHeight) {
+            this.kill();
+            return;
+        }
+
         // horizontal movement
         if (this.leftKey.isDown && !this.rightKey.isDown) {
             this.body.setAccelerationX(-this.ACCELERATION);
@@ -49,6 +69,17 @@ class Player extends Phaser.GameObjects.Sprite {
         // jumping
         if (this.body.blocked.down && this.zKey.isDown) {
             this.body.setVelocityY(-this.JUMP_VELOCITY);
+        }
+        else if (!this.body.blocked.down && !this.zKey.isDown) {
+            if (this.body.velocity.y < 0) {
+                this.body.setAccelerationY(this.JUMP_CANCEL_DECELERATION);
+            }
+            else {
+                this.body.setAccelerationY(0);
+            }
+        }
+        else {
+            this.body.setAccelerationY(0);
         }
 
         // choose animation

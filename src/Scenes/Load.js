@@ -6,7 +6,7 @@ class Load extends Phaser.Scene {
     preload() {
         this.load.setPath('./assets/');
 
-        this.load.spritesheet('pico-8-platformer', 'sprites/extruded-transparent.png', {frameWidth: 8, frameHeight: 8, margin: 1, spacing: 2});
+        this.load.spritesheet('pico-8-platformer', 'sprites/double-extruded-transparent.png', {frameWidth: 8, frameHeight: 8, margin: 2, spacing: 4});
         this.load.tilemapTiledJSON('level1-map', 'tilemaps/level1.tmj');
 
         this.load.spritesheet('player-anim', 'sprites/playerAnimation.png', {frameWidth: 8, frameHeight: 8});
@@ -46,9 +46,23 @@ class Load extends Phaser.Scene {
 
         this.anims.create({
             key: 'rest',
-            frameRate: 1,
+            duration: 1,
+            defaultTextureKey: 'player-anim',
             frames: [
-                {key: 'pico-8-platformer', frame: 93}
+                {frame: 4, duration: 1000},
+                {frame: 5, duration: 4000}
+            ]
+        });
+
+        this.anims.create({
+            key: 'die',
+            frameRate: 8,
+            defaultTextureKey: 'pico-8-platformer',
+            frames: [
+                {frame: 95},
+                {frame: 94},
+                {frame: 95},
+                {frame: 96}
             ]
         });
     }

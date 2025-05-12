@@ -6,16 +6,9 @@ class Level1 extends Phaser.Scene {
         this.my.collider = {};
     }
 
-    init() {
-        this.ACCELERATION = 300;
-        this.TURN_ACCELERATION = 1000;
-        this.DRAG = 1200;
-        this.MAX_VELOCITY = 80;
-        this.physics.world.gravity.y = 500;
-        this.JUMP_VELOCITY = 200;
-    }
-
     create() {
+        this.physics.world.gravity.y = 500;
+
         // create keys
         this.leftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         this.rightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
@@ -24,7 +17,7 @@ class Level1 extends Phaser.Scene {
 
         // make map layers
         this.my.map = this.add.tilemap('level1-map', 8, 8, 90, 20);
-        this.my.tileset = this.my.map.addTilesetImage('Pico-8-Platformer', 'pico-8-platformer', 8, 8, 1, 2);
+        this.my.tileset = this.my.map.addTilesetImage('Pico-8-Platformer', 'pico-8-platformer', 8, 8, 2, 4);
         this.my.skyLayer = this.my.map.createLayer('Sky', this.my.tileset, 0, 0);
         this.my.yellowLayer = this.my.map.createLayer('Yellow', this.my.tileset, 0, 0);
         this.my.pinkLayer = this.my.map.createLayer('Pink', this.my.tileset, 0, 0).setVisible(false);
@@ -40,8 +33,13 @@ class Level1 extends Phaser.Scene {
         this.my.sprite.player = new Player(this, 16, 16, this.leftKey, this.rightKey, this.zKey);
         
         // create player/world colliders
-        this.my.collider.playerYellow = this.physics.add.collider(this.my.sprite.player, this.my.yellowLayer);
-        this.my.collider.playerPink = this.physics.add.collider(this.my.sprite.player, this.my.pinkLayer);
+        let playerTileCollide = (player, tile) => {
+            if (tile.properties.deadly) {
+                this.my.sprite.player.kill();
+            }
+        }
+        this.my.collider.playerYellow = this.physics.add.collider(this.my.sprite.player, this.my.yellowLayer, playerTileCollide);
+        this.my.collider.playerPink = this.physics.add.collider(this.my.sprite.player, this.my.pinkLayer, playerTileCollide);
         this.my.collider.playerPink.active = false;
         
         // set up camera
@@ -54,6 +52,11 @@ class Level1 extends Phaser.Scene {
             this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
             this.physics.world.debugGraphic.clear()
         }, this);
+        this.physics.world.drawDebug = false;
+    }
+
+    restartLevel() {
+        this.scene.start('level1');
     }
     
     update(time, delta) {

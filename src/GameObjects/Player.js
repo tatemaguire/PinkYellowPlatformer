@@ -28,12 +28,17 @@ class Player extends Phaser.GameObjects.Sprite {
         this.playerRestStartTime = 2500; // ms, when to start rest animation
 
         this.dying = false;
+
+        // footsteps
+        this.footstepsSFX = this.scene.sound.add('footsteps', {loop: true, volume: 0.1});
     }
 
     kill() {
         if (this.dying) return;
         this.dying = true;
         this.body.stop();
+
+        this.scene.sound.play('player-death', {volume: 1});
         this.anims.play('die');
         this.on('animationcomplete-die', () => {
             this.scene.restartLevel();
@@ -75,6 +80,9 @@ class Player extends Phaser.GameObjects.Sprite {
         // jumping
         if (this.body.blocked.down && this.zKey.isDown) {
             this.body.setVelocityY(-this.JUMP_VELOCITY);
+            let detune = Math.random()*200 - 100;
+            let volume = Math.random()*0.3 + 0.5;
+            this.scene.sound.play('jump', {detune: detune, volume: volume});
         }
         else if (!this.body.blocked.down && !this.zKey.isDown) {
             if (this.body.velocity.y < 0) {
@@ -88,17 +96,20 @@ class Player extends Phaser.GameObjects.Sprite {
             this.body.setAccelerationY(0);
         }
 
-        // choose animation
+        // choose animation and footsteps sound
         if (!this.body.blocked.down) {
+            this.footstepsSFX.stop();
             this.anims.play('jump');
             this.playerRestTimer = 0;
         }
         else {
             if (this.leftKey.isDown || this.rightKey.isDown) {
+                if (!this.footstepsSFX.isPlaying) this.footstepsSFX.play();
                 this.anims.play('walk', true);
                 this.playerRestTimer = 0;
             }
             else {
+                this.footstepsSFX.stop();
                 this.playerRestTimer += delta;
                 if (this.playerRestTimer > this.playerRestStartTime) {
                     this.anims.play('rest', true);

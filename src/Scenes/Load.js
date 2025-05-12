@@ -12,6 +12,12 @@ class Load extends Phaser.Scene {
         this.load.spritesheet('player-anim', 'sprites/playerAnimation.png', {frameWidth: 8, frameHeight: 8});
 
         this.load.bitmapFont('mini-square-mono', 'fonts/Kenney-Mini-Square-Mono.png', 'fonts/Kenney-Mini-Square-Mono.xml');
+
+        this.load.audio('player-death', 'audio/death.wav');
+        this.load.audio('swap-color', 'audio/swapColor.wav');
+        this.load.audio('get-coin', 'audio/getCoin.wav');
+        this.load.audio('jump', 'audio/jump.wav');
+        this.load.audio('footsteps', 'audio/footsteps.wav');
     }
 
     create() {

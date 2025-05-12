@@ -1,6 +1,9 @@
 class Level1 extends Phaser.Scene {
     constructor() {
         super('level1');
+    }
+
+    init() {
         this.my = {};
         this.my.sprite = {};
         this.my.collider = {};
@@ -63,6 +66,7 @@ class Level1 extends Phaser.Scene {
         let playerCoinCollide = (player, coin) => {
             this.my.score++;
             coin.destroy();
+            this.sound.play('get-coin');
             this.my.coinText.setText(('00' + this.my.score).slice(-2));
         }
         this.my.collider.playerCoin = this.physics.add.overlap(this.my.sprite.player, this.my.coins, playerCoinCollide);
@@ -73,12 +77,23 @@ class Level1 extends Phaser.Scene {
             .setLetterSpacing(0)
             .setScrollFactor(0);
 
+        // create game win text
+        this.my.winText = this.add.bitmapText(game.config.width/2, game.config.height/2-8, 'mini-square-mono', 'LEVEL COMPLETE')
+            .setFontSize(32)
+            .setLetterSpacing(0)
+            .setScrollFactor(0)
+            .setMaxWidth(game.config.width)
+            .setOrigin(0.5, 0.5)
+            .setCenterAlign()
+            .setVisible(false);
+
         // debug key listener (assigned to D key)
         this.input.keyboard.on('keydown-D', () => {
             this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
             this.physics.world.debugGraphic.clear()
         }, this);
         this.physics.world.drawDebug = false;
+
     }
 
     restartLevel() {
@@ -86,7 +101,8 @@ class Level1 extends Phaser.Scene {
     }
 
     finishLevel() {
-        console.log("WIN");
+        this.my.winText.setVisible(true);
+        this.physics.pause();
     }
     
     update(time, delta) {
@@ -94,6 +110,8 @@ class Level1 extends Phaser.Scene {
 
         // swap colors when player presses C
         if (Phaser.Input.Keyboard.JustDown(this.cKey)) {
+            let detune = Math.random()*200 - 100;
+            this.sound.play('swap-color', {detune: detune});
             if (this.my.yellowLayer.visible) {
                 this.my.yellowLayer.visible = false;
                 this.my.pinkLayer.visible = true;

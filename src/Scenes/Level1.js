@@ -93,7 +93,6 @@ class Level1 extends Phaser.Scene {
             this.physics.world.debugGraphic.clear()
         }, this);
         this.physics.world.drawDebug = false;
-
     }
 
     restartLevel() {

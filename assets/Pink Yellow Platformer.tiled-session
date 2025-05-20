@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "level1.tmx",
+    "activeFile": "/Users/tatemaguire/Desktop/cmpm120/PlatformImprovement/assets/platformer-level-1.tmx",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
@@ -12,12 +12,23 @@
             "scaleInDock": 3.4349,
             "scaleInEditor": 3.7229
         },
+        "/Users/tatemaguire/Desktop/cmpm120/PlatformImprovement/assets/platformer-level-1.tmx": {
+            "scale": 3.5468,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 755.7516634712981,
+                "y": 370.897710612383
+            }
+        },
+        "/Users/tatemaguire/Desktop/cmpm120/PlatformImprovement/assets/platformer-level-1.tmx#kenny_tilemap_packed": {
+            "scaleInDock": 1.3414
+        },
         "level1.tmx": {
             "scale": 4.7035,
-            "selectedLayer": 3,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 115.33964069310089,
-                "y": 91.52758584033167
+                "x": 595.8328904007653,
+                "y": 89.82672477941958
             }
         },
         "level1.tmx#Pico-8-Platformer": {
@@ -25,7 +36,7 @@
             "scaleInEditor": 3.7229
         }
     },
-    "last.exportedFilePath": "/Users/tatemaguire/Desktop/cmpm120/PinkYellowPlatformer/assets/tilemaps",
+    "last.exportedFilePath": "/Users/tatemaguire/Desktop/cmpm120/PlatformImprovement/assets",
     "last.imagePath": "/Users/tatemaguire/Desktop/cmpm120/PinkYellowPlatformer/assets/sprites",
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "map.lastUsedFormat": "tmx",
@@ -33,11 +44,12 @@
     "map.tileWidth": 8,
     "map.width": 90,
     "openFiles": [
-        "level1.tmx"
+        "/Users/tatemaguire/Desktop/cmpm120/PlatformImprovement/assets/platformer-level-1.tmx"
     ],
     "project": "Pink Yellow Platformer.tiled-project",
     "property.type": "bool",
     "recentFiles": [
+        "/Users/tatemaguire/Desktop/cmpm120/PlatformImprovement/assets/platformer-level-1.tmx",
         "level1.tmx"
     ],
     "tileset.embedInMap": true,

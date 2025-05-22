@@ -42,7 +42,7 @@ class Level1 extends Phaser.Scene {
         this.physics.world.setBounds(0, 0, 90*8, 20*8);
 
         // create player
-        this.my.sprite.player = new Player(this, 16, 16, this.leftKey, this.rightKey, this.zKey);
+        this.my.sprite.player = new Player(this, 600, 16, this.leftKey, this.rightKey, this.zKey);
         
         // create player/world colliders
         let playerTileCollide = (player, tile) => {
@@ -147,28 +147,6 @@ class Level1 extends Phaser.Scene {
             this.my.terrainLayer.forEachTile(this._swapTileToYellow);
             this.isYellow = true;
         }
-        // if (this.isYellow) {
-        //     // swap terrain visual
-        //     for (let yellowIndex of YELLOW_INDICES) {
-        //         this.my.terrainLayer.replaceByIndex(yellowIndex, yellowIndex+7);
-        //     }
-        //     // swap platform collision
-        //     this.my.terrainLayer.setCollision(YELLOW_PLATFORM_INDEX, false);
-        //     this.my.terrainLayer.setCollision(PINK_PLATFORM_INDEX, true);
-
-        //     this.isYellow = false;
-        // }
-        // else {
-        //     // swap terrain visual
-        //     for (let yellowIndex of YELLOW_INDICES) {
-        //         this.my.terrainLayer.replaceByIndex(yellowIndex+7, yellowIndex);
-        //     }
-        //     // swap platform collision
-        //     this.my.terrainLayer.setCollision(YELLOW_PLATFORM_INDEX, true);
-        //     this.my.terrainLayer.setCollision(PINK_PLATFORM_INDEX, false);
-
-        //     this.isYellow = true;
-        // }
     }
     
     update(time, delta) {
@@ -179,19 +157,6 @@ class Level1 extends Phaser.Scene {
             let detune = Math.random()*200 - 100;
             this.sound.play('swap-color', {detune: detune});
             this.swapTerrainColor();
-            // this.my.map.replaceByIndex(35, 42, undefined, undefined, undefined, undefined, this.my.terrainLayer);
-            // if (this.my.yellowLayer.visible) {
-            //     this.my.yellowLayer.visible = false;
-            //     this.my.pinkLayer.visible = true;
-            //     this.my.collider.playerYellow.active = false;
-            //     this.my.collider.playerPink.active = true;
-            // }
-            // else {
-            //     this.my.yellowLayer.visible = true;
-            //     this.my.pinkLayer.visible = false;
-            //     this.my.collider.playerYellow.active = true;
-            //     this.my.collider.playerPink.active = false;
-            // }
         }
     }
 }

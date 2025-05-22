@@ -102,22 +102,20 @@ class Player extends Phaser.GameObjects.Sprite {
 
         // choose animation
         if (!this.body.blocked.down) {
-            this.anims.play('jump');
             this.playerRestTimer = 0;
+            this.anims.play('jump');
+        }
+        else if (this.leftKey.isDown != this.rightKey.isDown) { // rightKey XOR leftKey (not both)
+            this.playerRestTimer = 0;
+            this.anims.play('walk', true);
         }
         else {
-            if (this.leftKey.isDown != this.rightKey.isDown) { // rightKey XOR leftKey (not both)
-                this.anims.play('walk', true);
-                this.playerRestTimer = 0;
+            this.playerRestTimer += delta;
+            if (this.playerRestTimer > this.playerRestStartTime) {
+                this.anims.play('rest', true);
             }
             else {
-                this.playerRestTimer += delta;
-                if (this.playerRestTimer > this.playerRestStartTime) {
-                    this.anims.play('rest', true);
-                }
-                else {
-                    this.anims.play('idle', true);
-                }
+                this.anims.play('idle', true);
             }
         }
 

@@ -12,7 +12,7 @@ class Player extends Phaser.GameObjects.Sprite {
         this.zKey = zKey;
 
         // design variables
-        this.ACCELERATION = 500;
+        this.ACCELERATION = 400;
         this.TURN_ACCELERATION = 1000;
         this.DRAG = 1200;
         this.MAX_VELOCITY = 80;
@@ -28,9 +28,13 @@ class Player extends Phaser.GameObjects.Sprite {
         this.playerRestStartTime = 2500; // ms, when to start rest animation
 
         this.dying = false;
+        this.onGrass = false;
 
         // footsteps
-        this.footstepsSFX = this.scene.sound.add('footsteps', {loop: true, volume: 0.1});
+        this.footstepMaxVolume = 0.3;
+        let config = {loop: true, volume: this.footstepMaxVolume, rate: 2}
+        this.grassFootstepsSFX = this.scene.sound.add('grassFootsteps', config);
+        this.stoneFootstepsSFX = this.scene.sound.add('stoneFootsteps', config);
     }
 
     kill() {
@@ -96,20 +100,17 @@ class Player extends Phaser.GameObjects.Sprite {
             this.body.setAccelerationY(0);
         }
 
-        // choose animation and footsteps sound
+        // choose animation
         if (!this.body.blocked.down) {
-            this.footstepsSFX.stop();
             this.anims.play('jump');
             this.playerRestTimer = 0;
         }
         else {
-            if (this.leftKey.isDown || this.rightKey.isDown) {
-                if (!this.footstepsSFX.isPlaying) this.footstepsSFX.play();
+            if (this.leftKey.isDown != this.rightKey.isDown) { // rightKey XOR leftKey (not both)
                 this.anims.play('walk', true);
                 this.playerRestTimer = 0;
             }
             else {
-                this.footstepsSFX.stop();
                 this.playerRestTimer += delta;
                 if (this.playerRestTimer > this.playerRestStartTime) {
                     this.anims.play('rest', true);
@@ -118,6 +119,28 @@ class Player extends Phaser.GameObjects.Sprite {
                     this.anims.play('idle', true);
                 }
             }
+        }
+
+        // choose footsteps SFX
+        if (this.body.blocked.down && (this.leftKey.isDown != this.rightKey.isDown)) {
+            let volume = this.footstepMaxVolume * Math.abs(this.body.velocity.x/this.MAX_VELOCITY);
+            let detune = Math.random() * 1500 - 1000;
+            if (this.onGrass) {
+                this.stoneFootstepsSFX.stop();
+                this.grassFootstepsSFX.setVolume(volume);
+                this.grassFootstepsSFX.setDetune(detune);
+                if (!this.grassFootstepsSFX.isPlaying) this.grassFootstepsSFX.play();
+            }
+            else {
+                this.grassFootstepsSFX.stop();
+                this.stoneFootstepsSFX.setVolume(volume);
+                this.stoneFootstepsSFX.setDetune(detune);
+                if (!this.stoneFootstepsSFX.isPlaying) this.stoneFootstepsSFX.play();
+            }
+        }
+        else {
+            this.grassFootstepsSFX.stop();
+            this.stoneFootstepsSFX.stop();
         }
 
         // choose direction

@@ -3,14 +3,14 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "/Users/tatemaguire/Desktop/cmpm120/PlatformImprovement/assets/platformer-level-1.tmx",
+    "activeFile": "level1.tmx",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "": {
             "scaleInDock": 3.4349,
-            "scaleInEditor": 3.7229
+            "scaleInEditor": 6.33
         },
         "/Users/tatemaguire/Desktop/cmpm120/PlatformImprovement/assets/platformer-level-1.tmx": {
             "scale": 3.5468,
@@ -24,15 +24,15 @@
             "scaleInDock": 1.3414
         },
         "level1.tmx": {
-            "scale": 4.7035,
-            "selectedLayer": 4,
+            "scale": 2.4091,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 595.8328904007653,
-                "y": 89.82672477941958
+                "x": 117.67880121207091,
+                "y": 108.13166742767007
             }
         },
         "level1.tmx#Pico-8-Platformer": {
-            "scaleInDock": 6.7488,
+            "scaleInDock": 3.3413,
             "scaleInEditor": 3.7229
         }
     },
@@ -44,13 +44,13 @@
     "map.tileWidth": 8,
     "map.width": 90,
     "openFiles": [
-        "/Users/tatemaguire/Desktop/cmpm120/PlatformImprovement/assets/platformer-level-1.tmx"
+        "level1.tmx"
     ],
     "project": "Pink Yellow Platformer.tiled-project",
     "property.type": "bool",
     "recentFiles": [
-        "/Users/tatemaguire/Desktop/cmpm120/PlatformImprovement/assets/platformer-level-1.tmx",
-        "level1.tmx"
+        "level1.tmx",
+        "/Users/tatemaguire/Desktop/cmpm120/PlatformImprovement/assets/platformer-level-1.tmx"
     ],
     "tileset.embedInMap": true,
     "tileset.tileSize": {

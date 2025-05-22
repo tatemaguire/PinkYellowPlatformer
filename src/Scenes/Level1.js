@@ -49,6 +49,7 @@ class Level1 extends Phaser.Scene {
             if (tile.properties.deadly) {
                 this.my.sprite.player.kill();
             }
+            this.my.sprite.player.onGrass = Boolean(tile.properties.soundsGrassy);
         }
         this.my.collider.playerTerrain = this.physics.add.collider(this.my.sprite.player, this.my.terrainLayer, playerTileCollide);
         

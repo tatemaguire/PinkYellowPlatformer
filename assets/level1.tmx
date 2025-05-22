@@ -14,12 +14,14 @@
   <tile id="2">
    <properties>
     <property name="collides" type="bool" value="true"/>
+    <property name="soundsGrassy" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="3">
    <properties>
     <property name="collides" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
+    <property name="soundsGrassy" type="bool" value="false"/>
     <property name="yellowVisual" type="bool" value="true"/>
    </properties>
   </tile>
@@ -27,6 +29,7 @@
    <properties>
     <property name="collides" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
+    <property name="soundsGrassy" type="bool" value="false"/>
     <property name="yellowVisual" type="bool" value="true"/>
    </properties>
   </tile>
@@ -34,6 +37,7 @@
    <properties>
     <property name="collides" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
+    <property name="soundsGrassy" type="bool" value="false"/>
     <property name="yellowVisual" type="bool" value="true"/>
    </properties>
   </tile>
@@ -71,24 +75,28 @@
   <tile id="17">
    <properties>
     <property name="collides" type="bool" value="true"/>
+    <property name="soundsGrassy" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="18">
    <properties>
     <property name="collides" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
+    <property name="soundsGrassy" type="bool" value="false"/>
     <property name="yellowVisual" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="19">
    <properties>
     <property name="collidesYellowOnly" type="bool" value="true"/>
+    <property name="soundsGrassy" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="20">
    <properties>
     <property name="collides" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
+    <property name="soundsGrassy" type="bool" value="false"/>
     <property name="yellowVisual" type="bool" value="true"/>
    </properties>
   </tile>
@@ -131,12 +139,14 @@
   <tile id="32">
    <properties>
     <property name="collides" type="bool" value="true"/>
+    <property name="soundsGrassy" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="33">
    <properties>
     <property name="collides" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
+    <property name="soundsGrassy" type="bool" value="false"/>
     <property name="yellowVisual" type="bool" value="true"/>
    </properties>
   </tile>
@@ -144,6 +154,7 @@
    <properties>
     <property name="collides" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
+    <property name="soundsGrassy" type="bool" value="true"/>
     <property name="yellowVisual" type="bool" value="true"/>
    </properties>
   </tile>
@@ -151,6 +162,7 @@
    <properties>
     <property name="collides" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
+    <property name="soundsGrassy" type="bool" value="false"/>
     <property name="yellowVisual" type="bool" value="true"/>
    </properties>
   </tile>
@@ -189,6 +201,7 @@
    <properties>
     <property name="collides" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
+    <property name="soundsGrassy" type="bool" value="true"/>
     <property name="yellowVisual" type="bool" value="true"/>
    </properties>
   </tile>
@@ -196,6 +209,7 @@
    <properties>
     <property name="collides" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
+    <property name="soundsGrassy" type="bool" value="true"/>
     <property name="yellowVisual" type="bool" value="true"/>
    </properties>
   </tile>
@@ -203,6 +217,7 @@
    <properties>
     <property name="collides" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
+    <property name="soundsGrassy" type="bool" value="true"/>
     <property name="yellowVisual" type="bool" value="true"/>
    </properties>
   </tile>
@@ -210,6 +225,7 @@
    <properties>
     <property name="collides" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
+    <property name="soundsGrassy" type="bool" value="true"/>
     <property name="yellowVisual" type="bool" value="true"/>
    </properties>
   </tile>
@@ -243,6 +259,7 @@
    <properties>
     <property name="collides" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
+    <property name="soundsGrassy" type="bool" value="false"/>
     <property name="yellowVisual" type="bool" value="true"/>
    </properties>
   </tile>
@@ -250,6 +267,7 @@
    <properties>
     <property name="collides" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
+    <property name="soundsGrassy" type="bool" value="true"/>
     <property name="yellowVisual" type="bool" value="true"/>
    </properties>
   </tile>
@@ -257,6 +275,7 @@
    <properties>
     <property name="collides" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
+    <property name="soundsGrassy" type="bool" value="true"/>
     <property name="yellowVisual" type="bool" value="true"/>
    </properties>
   </tile>
@@ -275,12 +294,14 @@
   <tile id="76">
    <properties>
     <property name="collides" type="bool" value="true"/>
+    <property name="soundsGrassy" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="77">
    <properties>
     <property name="collides" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
+    <property name="soundsGrassy" type="bool" value="false"/>
     <property name="yellowVisual" type="bool" value="true"/>
    </properties>
   </tile>
@@ -288,6 +309,7 @@
    <properties>
     <property name="collides" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
+    <property name="soundsGrassy" type="bool" value="false"/>
     <property name="yellowVisual" type="bool" value="true"/>
    </properties>
   </tile>
@@ -295,6 +317,7 @@
    <properties>
     <property name="collides" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
+    <property name="soundsGrassy" type="bool" value="false"/>
     <property name="yellowVisual" type="bool" value="true"/>
    </properties>
   </tile>

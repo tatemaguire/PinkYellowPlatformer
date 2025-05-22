@@ -17,7 +17,8 @@ class Load extends Phaser.Scene {
         this.load.audio('swap-color', 'audio/swapColor.wav');
         this.load.audio('get-coin', 'audio/getCoin.wav');
         this.load.audio('jump', 'audio/jump.wav');
-        this.load.audio('footsteps', 'audio/footsteps.wav');
+        this.load.audio('grassFootsteps', 'audio/grassFootsteps.wav');
+        this.load.audio('stoneFootsteps', 'audio/stoneFootsteps.wav');
     }
 
     create() {

@@ -29,12 +29,18 @@ class Player extends Phaser.GameObjects.Sprite {
 
         this.dying = false;
         this.onGrass = false;
+        this.makeImpactWhenLanding = false;
 
         // footsteps
         this.footstepMaxVolume = 0.4;
-        let config = {loop: true, volume: this.footstepMaxVolume, rate: 2}
-        this.grassFootstepsSFX = this.scene.sound.add('grassFootsteps', config);
-        this.stoneFootstepsSFX = this.scene.sound.add('stoneFootsteps', config);
+        let footstepsConfig = {loop: true, volume: this.footstepMaxVolume, rate: 2}
+        this.grassFootstepsSFX = this.scene.sound.add('grassFootsteps', footstepsConfig);
+        this.stoneFootstepsSFX = this.scene.sound.add('stoneFootsteps', footstepsConfig);
+
+        // impact sound
+        let impactConfig = {volume: 0.7, rate: 2};
+        this.grassImpactSFX = this.scene.sound.add('grassFootsteps', impactConfig);
+        this.stoneImpactSFX = this.scene.sound.add('stoneFootsteps', impactConfig);
     }
 
     kill() {
@@ -58,7 +64,7 @@ class Player extends Phaser.GameObjects.Sprite {
             return;
         }
 
-        // win if at the left of the world bounds
+        // win if at the right of the world bounds
         if (this.body.x >= this.scene.physics.world.bounds.right - this.displayWidth*2) {
             this.scene.finishLevel();
         }
@@ -88,13 +94,8 @@ class Player extends Phaser.GameObjects.Sprite {
             let volume = Math.random()*0.3 + 0.5;
             this.scene.sound.play('jump', {detune: detune, volume: volume});
         }
-        else if (!this.body.blocked.down && !this.zKey.isDown) {
-            if (this.body.velocity.y < 0) {
-                this.body.setAccelerationY(this.JUMP_CANCEL_DECELERATION);
-            }
-            else {
-                this.body.setAccelerationY(0);
-            }
+        else if (!this.body.blocked.down && !this.zKey.isDown && this.body.velocity.y < 0) {
+            this.body.setAccelerationY(this.JUMP_CANCEL_DECELERATION);
         }
         else {
             this.body.setAccelerationY(0);
@@ -139,6 +140,22 @@ class Player extends Phaser.GameObjects.Sprite {
         else {
             this.grassFootstepsSFX.stop();
             this.stoneFootstepsSFX.stop();
+        }
+
+        // impact SFX
+        if (this.makeImpactWhenLanding && this.body.blocked.down) {
+            if (this.onGrass) {
+                this.grassImpactSFX.play();
+                this.grassImpactSFX.setSeek(0.25);
+            }
+            else {
+                this.stoneImpactSFX.play();
+                this.stoneImpactSFX.setSeek(0.281);
+            }
+            this.makeImpactWhenLanding = false;
+        }
+        else if (!this.body.blocked.down) {
+            this.makeImpactWhenLanding = true;
         }
 
         // choose direction

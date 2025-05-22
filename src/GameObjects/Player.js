@@ -31,7 +31,7 @@ class Player extends Phaser.GameObjects.Sprite {
         this.onGrass = false;
 
         // footsteps
-        this.footstepMaxVolume = 0.3;
+        this.footstepMaxVolume = 0.4;
         let config = {loop: true, volume: this.footstepMaxVolume, rate: 2}
         this.grassFootstepsSFX = this.scene.sound.add('grassFootsteps', config);
         this.stoneFootstepsSFX = this.scene.sound.add('stoneFootsteps', config);

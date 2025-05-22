@@ -42,7 +42,7 @@ class Level1 extends Phaser.Scene {
         this.physics.world.setBounds(0, 0, 90*8, 20*8);
 
         // create player
-        this.my.sprite.player = new Player(this, 600, 16, this.leftKey, this.rightKey, this.zKey);
+        this.my.sprite.player = new Player(this, 16, 16, this.leftKey, this.rightKey, this.zKey);
         
         // create player/world colliders
         let playerTileCollide = (player, tile) => {

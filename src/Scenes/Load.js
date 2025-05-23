@@ -75,5 +75,16 @@ class Load extends Phaser.Scene {
                 {frame: 96}
             ]
         });
+
+        this.anims.create({
+            key: 'coin',
+            frameRate: 3,
+            defaultTextureKey: 'pico-8-platformer',
+            frames: [
+                {frame: 88},
+                {frame: 89}
+            ],
+            repeat: -1
+        });
     }
 }

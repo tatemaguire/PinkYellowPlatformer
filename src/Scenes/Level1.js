@@ -36,10 +36,6 @@ class Level1 extends Phaser.Scene {
                 tile.setCollision(true, true, true, true);
             }
             if (tile.properties.collidesPinkOnly) tile.setAlpha(0);
-            // if (tile.properties.collidesOnTop) {
-            //     tile.setCollision(false, false, true, false);
-            //     console.log(tile);
-            // }
         });
 
         // set bounds to level size
@@ -70,7 +66,9 @@ class Level1 extends Phaser.Scene {
             coin.x += 4;
             coin.y += 4;
             this.physics.add.existing(coin, 1);
+            coin.body.setSize(4, 4);
         }
+        this.anims.play('coin', this.my.coins);
 
         // create coin collision
         let playerCoinCollide = (player, coin) => {
@@ -80,23 +78,58 @@ class Level1 extends Phaser.Scene {
             coin.destroy();
         }
         this.my.collider.playerCoin = this.physics.add.overlap(this.my.sprite.player, this.my.coins, playerCoinCollide);
+
+        // create leaf particles
+        this.yellowLeafEmitter = this.add.particles(0, 0, 'particles', {
+            frame: 'Yellow-Leaf0',
+            speedY: 10,
+            lifespan: 15000,
+            maxAliveParticles: 100,
+            quantity: 100,
+            speedX: {min: 0, max: 10},
+            emitZone: {
+                type: 'random',
+                source: this.cameras.main.getBounds()
+            },
+            deathZone: {
+                type: 'onLeave',
+                source: this.cameras.main.getBounds()
+            }
+        });
+        this.pinkLeafEmitter = this.add.particles(0, 0, 'particles', {
+            frame: 'Pink-Leaf0',
+            speedY: 10,
+            lifespan: 15000,
+            maxAliveParticles: 100,
+            quantity: 100,
+            speedX: {min: 0, max: 10},
+            emitZone: {
+                type: 'random',
+                source: this.cameras.main.getBounds()
+            },
+            deathZone: {
+                type: 'onLeave',
+                source: this.cameras.main.getBounds()
+            },
+            visible: false
+        });
         
         // create coin count text
         this.my.coinText = this.add.bitmapText(4, -2, 'mini-square-mono', '00')
-            .setFontSize(16)
-            .setLetterSpacing(0)
-            .setScrollFactor(0);
-
+        .setFontSize(16)
+        .setLetterSpacing(0)
+        .setScrollFactor(0);
+        
         // create game win text
         this.my.winText = this.add.bitmapText(game.config.width/2, game.config.height/2-8, 'mini-square-mono', 'LEVEL COMPLETE')
-            .setFontSize(32)
-            .setLetterSpacing(0)
-            .setScrollFactor(0)
-            .setMaxWidth(game.config.width)
-            .setOrigin(0.5, 0.5)
-            .setCenterAlign()
-            .setVisible(false);
-
+        .setFontSize(32)
+        .setLetterSpacing(0)
+        .setScrollFactor(0)
+        .setMaxWidth(game.config.width)
+        .setOrigin(0.5, 0.5)
+        .setCenterAlign()
+        .setVisible(false);
+        
         // debug key listener (assigned to D key)
         this.input.keyboard.on('keydown-D', () => {
             this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
@@ -104,16 +137,16 @@ class Level1 extends Phaser.Scene {
         }, this);
         this.physics.world.drawDebug = false;
     }
-
+    
     restartLevel() {
         this.scene.start('level1');
     }
-
+    
     finishLevel() {
         this.my.winText.setVisible(true);
         this.physics.pause();
     }
-
+    
     _swapTileToYellow(tile) {
         if (tile.properties.yellowVisual) {
             tile.index -= Number(tile.properties.indexModifier);
@@ -142,17 +175,21 @@ class Level1 extends Phaser.Scene {
             tile.setAlpha(1);
         }
     }
-
+    
     swapTerrainColor() {
         let detune = Math.random()*200 - 100;
         this.sound.play('swap-color', {detune: detune});
-
+        
         if (this.isYellow) {
             this.my.terrainLayer.forEachTile(this._swapTileToPink);
+            this.yellowLeafEmitter.visible = false;
+            this.pinkLeafEmitter.visible = true;
             this.isYellow = false;
         }
         else {
             this.my.terrainLayer.forEachTile(this._swapTileToYellow);
+            this.yellowLeafEmitter.visible = true;
+            this.pinkLeafEmitter.visible = false;
             this.isYellow = true;
         }
     }

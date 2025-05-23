@@ -10,7 +10,7 @@
     "fileStates": {
         "": {
             "scaleInDock": 3.4349,
-            "scaleInEditor": 3.7229
+            "scaleInEditor": 6.99
         },
         "/Users/tatemaguire/Desktop/cmpm120/PlatformImprovement/assets/platformer-level-1.tmx": {
             "scale": 3.5468,
@@ -27,8 +27,8 @@
             "scale": 2.4426,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 155.3672316384181,
-                "y": 124.66224514861213
+                "x": 129.16564316711703,
+                "y": 127.52804388766069
             }
         },
         "level1.tmx#Pico-8-Platformer": {

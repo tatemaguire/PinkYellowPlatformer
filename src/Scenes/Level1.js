@@ -9,6 +9,8 @@ class Level1 extends Phaser.Scene {
         this.my.collider = {};
         this.my.score = 0;
         this.isYellow = true;
+
+        this.sound.stopAll();
     }
 
     create() {
@@ -42,8 +44,8 @@ class Level1 extends Phaser.Scene {
         this.physics.world.setBounds(0, 0, 90*8, 20*8);
 
         // create player
-        this.my.sprite.player = new Player(this, 16, 16, this.leftKey, this.rightKey, this.zKey);
-        
+        let playerSpawn = this.my.map.findObject('Objects', (obj) => obj.name == 'PlayerSpawn');
+        this.my.sprite.player = new Player(this, playerSpawn.x+4, playerSpawn.y+4, this.leftKey, this.rightKey, this.zKey);
         // create player/world colliders
         let playerTileCollide = (player, tile) => {
             if (tile.properties.deadly) {
@@ -79,56 +81,61 @@ class Level1 extends Phaser.Scene {
         }
         this.my.collider.playerCoin = this.physics.add.overlap(this.my.sprite.player, this.my.coins, playerCoinCollide);
 
+        // create leaf particles emit zone
+        let leafParticleZone = this.cameras.main.getBounds();
+        leafParticleZone.x -= 16;
+        leafParticleZone.width += 32;
         // create leaf particles
-        this.yellowLeafEmitter = this.add.particles(0, 0, 'particles', {
+        let leafCount = (leafParticleZone.width * leafParticleZone.height) / 1280; // 1 leaf per 320 pixels
+        let leafConfig = {
             frame: 'Yellow-Leaf0',
-            speedY: 10,
-            lifespan: 15000,
-            maxAliveParticles: 100,
-            quantity: 100,
             speedX: {min: 0, max: 10},
+            speedY: 10,
+            lifespan: 20000,
+            rotate: [0, 0, 0, 0, 0, 0, 90],
+            maxAliveParticles: leafCount,
+            quantity: leafCount,
             emitZone: {
                 type: 'random',
-                source: this.cameras.main.getBounds()
+                source: leafParticleZone
             },
             deathZone: {
                 type: 'onLeave',
-                source: this.cameras.main.getBounds()
+                source: leafParticleZone
             }
-        });
-        this.pinkLeafEmitter = this.add.particles(0, 0, 'particles', {
-            frame: 'Pink-Leaf0',
-            speedY: 10,
-            lifespan: 15000,
-            maxAliveParticles: 100,
-            quantity: 100,
-            speedX: {min: 0, max: 10},
-            emitZone: {
-                type: 'random',
-                source: this.cameras.main.getBounds()
-            },
-            deathZone: {
-                type: 'onLeave',
-                source: this.cameras.main.getBounds()
-            },
-            visible: false
-        });
+        }
+        this.yellowLeafEmitter = this.add.particles(0, 0, 'particles', leafConfig);
+        this.pinkLeafEmitter = this.add.particles(0, 0, 'particles', leafConfig)
+            .setEmitterFrame('Pink-Leaf0')
+            .setVisible(false);
+        // fill the screen with particles before changing emit zone
+        this.yellowLeafEmitter.explode(leafCount)
+        this.yellowLeafEmitter.setFrequency(100);
+        this.pinkLeafEmitter.explode(leafCount)
+        this.pinkLeafEmitter.setFrequency(100);
+        // change emit zone to spawn just at the top of the screen
+        let topEdgeZone = {
+            type: 'random',
+            source: leafParticleZone.getLineA()
+        };
+        this.yellowLeafEmitter.clearEmitZones().addEmitZone(topEdgeZone);
+        this.pinkLeafEmitter.clearEmitZones().addEmitZone(topEdgeZone);
         
         // create coin count text
         this.my.coinText = this.add.bitmapText(4, -2, 'mini-square-mono', '00')
-        .setFontSize(16)
-        .setLetterSpacing(0)
-        .setScrollFactor(0);
+            .setFontSize(16)
+            .setLetterSpacing(0)
+            .setScrollFactor(0);
         
         // create game win text
         this.my.winText = this.add.bitmapText(game.config.width/2, game.config.height/2-8, 'mini-square-mono', 'LEVEL COMPLETE')
-        .setFontSize(32)
-        .setLetterSpacing(0)
-        .setScrollFactor(0)
-        .setMaxWidth(game.config.width)
-        .setOrigin(0.5, 0.5)
-        .setCenterAlign()
-        .setVisible(false);
+            .setFontSize(32)
+            .setLetterSpacing(0)
+            .setScrollFactor(0)
+            .setMaxWidth(game.config.width)
+            .setOrigin(0.5, 0.5)
+            .setCenterAlign()
+            .setVisible(false);
         
         // debug key listener (assigned to D key)
         this.input.keyboard.on('keydown-D', () => {
@@ -145,6 +152,10 @@ class Level1 extends Phaser.Scene {
     finishLevel() {
         this.my.winText.setVisible(true);
         this.physics.pause();
+        this.input.keyboard.on('keydown', (event) => {
+            // console.log(event);
+            if (event.key === 'z') this.restartLevel();
+        });
     }
     
     _swapTileToYellow(tile) {

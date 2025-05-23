@@ -14,12 +14,14 @@
   <tile id="2">
    <properties>
     <property name="collides" type="bool" value="true"/>
+    <property name="emitsStoneParticles" type="bool" value="true"/>
     <property name="soundsGrassy" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="3">
    <properties>
     <property name="collides" type="bool" value="true"/>
+    <property name="emitsStoneParticles" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
     <property name="soundsGrassy" type="bool" value="false"/>
     <property name="yellowVisual" type="bool" value="true"/>
@@ -28,6 +30,7 @@
   <tile id="4">
    <properties>
     <property name="collides" type="bool" value="true"/>
+    <property name="emitsStoneParticles" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
     <property name="soundsGrassy" type="bool" value="false"/>
     <property name="yellowVisual" type="bool" value="true"/>
@@ -36,6 +39,7 @@
   <tile id="5">
    <properties>
     <property name="collides" type="bool" value="true"/>
+    <property name="emitsStoneParticles" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
     <property name="soundsGrassy" type="bool" value="false"/>
     <property name="yellowVisual" type="bool" value="true"/>
@@ -54,6 +58,7 @@
   <tile id="9">
    <properties>
     <property name="collides" type="bool" value="true"/>
+    <property name="emitsStoneParticles" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="13">
@@ -75,12 +80,14 @@
   <tile id="17">
    <properties>
     <property name="collides" type="bool" value="true"/>
+    <property name="emitsStoneParticles" type="bool" value="true"/>
     <property name="soundsGrassy" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="18">
    <properties>
     <property name="collides" type="bool" value="true"/>
+    <property name="emitsStoneParticles" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
     <property name="soundsGrassy" type="bool" value="false"/>
     <property name="yellowVisual" type="bool" value="true"/>
@@ -95,6 +102,7 @@
   <tile id="20">
    <properties>
     <property name="collides" type="bool" value="true"/>
+    <property name="emitsStoneParticles" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
     <property name="soundsGrassy" type="bool" value="false"/>
     <property name="yellowVisual" type="bool" value="true"/>
@@ -113,6 +121,7 @@
   <tile id="24">
    <properties>
     <property name="collides" type="bool" value="true"/>
+    <property name="emitsStoneParticles" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="26">
@@ -139,12 +148,14 @@
   <tile id="32">
    <properties>
     <property name="collides" type="bool" value="true"/>
+    <property name="emitsStoneParticles" type="bool" value="true"/>
     <property name="soundsGrassy" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="33">
    <properties>
     <property name="collides" type="bool" value="true"/>
+    <property name="emitsStoneParticles" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
     <property name="soundsGrassy" type="bool" value="false"/>
     <property name="yellowVisual" type="bool" value="true"/>
@@ -161,6 +172,7 @@
   <tile id="35">
    <properties>
     <property name="collides" type="bool" value="true"/>
+    <property name="emitsStoneParticles" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
     <property name="soundsGrassy" type="bool" value="false"/>
     <property name="yellowVisual" type="bool" value="true"/>
@@ -179,6 +191,7 @@
   <tile id="39">
    <properties>
     <property name="collides" type="bool" value="true"/>
+    <property name="emitsStoneParticles" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="43">
@@ -249,6 +262,11 @@
     <property name="collides" type="bool" value="true"/>
    </properties>
   </tile>
+  <tile id="60">
+   <properties>
+    <property name="collidesOnTop" type="bool" value="true"/>
+   </properties>
+  </tile>
   <tile id="61">
    <properties>
     <property name="indexModifier" value="7"/>
@@ -258,6 +276,7 @@
   <tile id="62">
    <properties>
     <property name="collides" type="bool" value="true"/>
+    <property name="emitsStoneParticles" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
     <property name="soundsGrassy" type="bool" value="false"/>
     <property name="yellowVisual" type="bool" value="true"/>
@@ -294,12 +313,14 @@
   <tile id="76">
    <properties>
     <property name="collides" type="bool" value="true"/>
+    <property name="emitsStoneParticles" type="bool" value="true"/>
     <property name="soundsGrassy" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="77">
    <properties>
     <property name="collides" type="bool" value="true"/>
+    <property name="emitsStoneParticles" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
     <property name="soundsGrassy" type="bool" value="false"/>
     <property name="yellowVisual" type="bool" value="true"/>
@@ -308,6 +329,7 @@
   <tile id="78">
    <properties>
     <property name="collides" type="bool" value="true"/>
+    <property name="emitsStoneParticles" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
     <property name="soundsGrassy" type="bool" value="false"/>
     <property name="yellowVisual" type="bool" value="true"/>
@@ -316,6 +338,7 @@
   <tile id="79">
    <properties>
     <property name="collides" type="bool" value="true"/>
+    <property name="emitsStoneParticles" type="bool" value="true"/>
     <property name="indexModifier" value="7"/>
     <property name="soundsGrassy" type="bool" value="false"/>
     <property name="yellowVisual" type="bool" value="true"/>

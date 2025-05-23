@@ -36,6 +36,10 @@ class Level1 extends Phaser.Scene {
                 tile.setCollision(true, true, true, true);
             }
             if (tile.properties.collidesPinkOnly) tile.setAlpha(0);
+            // if (tile.properties.collidesOnTop) {
+            //     tile.setCollision(false, false, true, false);
+            //     console.log(tile);
+            // }
         });
 
         // set bounds to level size
@@ -49,7 +53,8 @@ class Level1 extends Phaser.Scene {
             if (tile.properties.deadly) {
                 this.my.sprite.player.kill();
             }
-            this.my.sprite.player.onGrass = Boolean(tile.properties.soundsGrassy);
+            this.my.sprite.player.floorSoundsGrassy = Boolean(tile.properties.soundsGrassy);
+            this.my.sprite.player.floorEmitsStone = Boolean(tile.properties.emitsStoneParticles);
         }
         this.my.collider.playerTerrain = this.physics.add.collider(this.my.sprite.player, this.my.terrainLayer, playerTileCollide);
         
@@ -70,9 +75,9 @@ class Level1 extends Phaser.Scene {
         // create coin collision
         let playerCoinCollide = (player, coin) => {
             this.my.score++;
-            coin.destroy();
-            this.sound.play('get-coin');
             this.my.coinText.setText(('00' + this.my.score).slice(-2));
+            this.sound.play('get-coin');
+            coin.destroy();
         }
         this.my.collider.playerCoin = this.physics.add.overlap(this.my.sprite.player, this.my.coins, playerCoinCollide);
         
@@ -139,6 +144,9 @@ class Level1 extends Phaser.Scene {
     }
 
     swapTerrainColor() {
+        let detune = Math.random()*200 - 100;
+        this.sound.play('swap-color', {detune: detune});
+
         if (this.isYellow) {
             this.my.terrainLayer.forEachTile(this._swapTileToPink);
             this.isYellow = false;
@@ -154,8 +162,6 @@ class Level1 extends Phaser.Scene {
 
         // swap colors when player presses C
         if (Phaser.Input.Keyboard.JustDown(this.cKey)) {
-            let detune = Math.random()*200 - 100;
-            this.sound.play('swap-color', {detune: detune});
             this.swapTerrainColor();
         }
     }

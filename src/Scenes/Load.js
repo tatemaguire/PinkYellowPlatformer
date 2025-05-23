@@ -10,6 +10,7 @@ class Load extends Phaser.Scene {
         this.load.tilemapTiledJSON('level1-map', 'tilemaps/level1.tmj');
 
         this.load.spritesheet('player-anim', 'sprites/playerAnimation.png', {frameWidth: 8, frameHeight: 8});
+        this.load.atlas('particles', 'sprites/particles.png', 'sprites/particles.json');
 
         this.load.bitmapFont('mini-square-mono', 'fonts/Kenney-Mini-Square-Mono.png', 'fonts/Kenney-Mini-Square-Mono.xml');
 

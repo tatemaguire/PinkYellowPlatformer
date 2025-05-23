@@ -121,6 +121,7 @@
             3, 3, 3, 3, 3, 3, 3, 19, 3, 3, 3, 3, 3, 19, 65, 2684354641, 0, 0, 0, 0, 0, 0, 0, 0, 40, 25, 34, 35, 34, 35, 35, 35, 36, 35, 35, 36, 33, 3, 18, 10, 3, 0, 0, 1610612812, 3, 33, 0, 0, 0, 0, 76, 3, 0, 0, 40, 3, 33, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 10, 34, 18, 3, 40, 25, 40, 3, 33, 33, 10, 3, 3, 18, 3, 10, 3, 3],
          "height":20,
          "id":10,
+         "locked":true,
          "name":"Terrain",
          "opacity":1,
          "type":"tilelayer",
@@ -203,6 +204,11 @@
                          "value":true
                         }, 
                         {
+                         "name":"emitsStoneParticles",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"soundsGrassy",
                          "type":"bool",
                          "value":false
@@ -213,6 +219,11 @@
                  "properties":[
                         {
                          "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"emitsStoneParticles",
                          "type":"bool",
                          "value":true
                         }, 
@@ -241,6 +252,11 @@
                          "value":true
                         }, 
                         {
+                         "name":"emitsStoneParticles",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"indexModifier",
                          "type":"string",
                          "value":"7"
@@ -261,6 +277,11 @@
                  "properties":[
                         {
                          "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"emitsStoneParticles",
                          "type":"bool",
                          "value":true
                         }, 
@@ -303,6 +324,11 @@
                  "properties":[
                         {
                          "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"emitsStoneParticles",
                          "type":"bool",
                          "value":true
                         }]
@@ -348,6 +374,11 @@
                          "value":true
                         }, 
                         {
+                         "name":"emitsStoneParticles",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"soundsGrassy",
                          "type":"bool",
                          "value":false
@@ -358,6 +389,11 @@
                  "properties":[
                         {
                          "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"emitsStoneParticles",
                          "type":"bool",
                          "value":true
                         }, 
@@ -400,6 +436,11 @@
                          "value":true
                         }, 
                         {
+                         "name":"emitsStoneParticles",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"indexModifier",
                          "type":"string",
                          "value":"7"
@@ -438,6 +479,11 @@
                  "properties":[
                         {
                          "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"emitsStoneParticles",
                          "type":"bool",
                          "value":true
                         }]
@@ -492,6 +538,11 @@
                          "value":true
                         }, 
                         {
+                         "name":"emitsStoneParticles",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"soundsGrassy",
                          "type":"bool",
                          "value":false
@@ -502,6 +553,11 @@
                  "properties":[
                         {
                          "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"emitsStoneParticles",
                          "type":"bool",
                          "value":true
                         }, 
@@ -554,6 +610,11 @@
                          "value":true
                         }, 
                         {
+                         "name":"emitsStoneParticles",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"indexModifier",
                          "type":"string",
                          "value":"7"
@@ -592,6 +653,11 @@
                  "properties":[
                         {
                          "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"emitsStoneParticles",
                          "type":"bool",
                          "value":true
                         }]
@@ -761,6 +827,15 @@
                         }]
                 }, 
                 {
+                 "id":60,
+                 "properties":[
+                        {
+                         "name":"collidesOnTop",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }, 
+                {
                  "id":61,
                  "properties":[
                         {
@@ -779,6 +854,11 @@
                  "properties":[
                         {
                          "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"emitsStoneParticles",
                          "type":"bool",
                          "value":true
                         }, 
@@ -883,6 +963,11 @@
                          "value":true
                         }, 
                         {
+                         "name":"emitsStoneParticles",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"soundsGrassy",
                          "type":"bool",
                          "value":false
@@ -893,6 +978,11 @@
                  "properties":[
                         {
                          "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"emitsStoneParticles",
                          "type":"bool",
                          "value":true
                         }, 
@@ -921,6 +1011,11 @@
                          "value":true
                         }, 
                         {
+                         "name":"emitsStoneParticles",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"indexModifier",
                          "type":"string",
                          "value":"7"
@@ -941,6 +1036,11 @@
                  "properties":[
                         {
                          "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"emitsStoneParticles",
                          "type":"bool",
                          "value":true
                         }, 

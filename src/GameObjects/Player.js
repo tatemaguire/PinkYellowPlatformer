@@ -28,7 +28,9 @@ class Player extends Phaser.GameObjects.Sprite {
         this.playerRestStartTime = 2500; // ms, when to start rest animation
 
         this.dying = false;
-        this.onGrass = false;
+
+        this.floorSoundsGrassy = false;
+        this.floorEmitsStone = false;
         this.makeImpactWhenLanding = false;
 
         // footsteps
@@ -41,6 +43,20 @@ class Player extends Phaser.GameObjects.Sprite {
         let impactConfig = {volume: 0.7, rate: 2};
         this.grassImpactSFX = this.scene.sound.add('grassFootsteps', impactConfig);
         this.stoneImpactSFX = this.scene.sound.add('stoneFootsteps', impactConfig);
+
+        // impact particles
+        this.IMPACT_PARTICLE_COUNT = 5;
+        this.impactParticles = new Phaser.GameObjects.Particles.ParticleEmitter(this.scene, 0, 0, 'particles', {
+            frame: ['White-Small0', 'White-Large0'],
+            rotate: [0, 90, 180, 270],
+            speed: {min: 10, max: 40},
+            gravityY: 200,
+            lifespan: {min: 100, max: 200},
+            angle: {min: 0, max: -180}
+        });
+        this.scene.add.existing(this.impactParticles);
+        this.impactParticles.startFollow(this, 0, 4);
+        this.impactParticles.stop();
     }
 
     kill() {
@@ -93,6 +109,7 @@ class Player extends Phaser.GameObjects.Sprite {
             let detune = Math.random()*200 - 100;
             let volume = Math.random()*0.3 + 0.5;
             this.scene.sound.play('jump', {detune: detune, volume: volume});
+            this.impactParticles.explode(this.IMPACT_PARTICLE_COUNT);
         }
         else if (!this.body.blocked.down && !this.zKey.isDown && this.body.velocity.y < 0) {
             this.body.setAccelerationY(this.JUMP_CANCEL_DECELERATION);
@@ -124,7 +141,7 @@ class Player extends Phaser.GameObjects.Sprite {
         if (this.body.blocked.down && (this.leftKey.isDown != this.rightKey.isDown)) {
             let volume = this.footstepMaxVolume * Math.abs(this.body.velocity.x/this.MAX_VELOCITY);
             let detune = Math.random() * 1500 - 1000;
-            if (this.onGrass) {
+            if (this.floorSoundsGrassy) {
                 this.stoneFootstepsSFX.stop();
                 this.grassFootstepsSFX.setVolume(volume);
                 this.grassFootstepsSFX.setDetune(detune);
@@ -142,9 +159,10 @@ class Player extends Phaser.GameObjects.Sprite {
             this.stoneFootstepsSFX.stop();
         }
 
-        // impact SFX
+        // impact
         if (this.makeImpactWhenLanding && this.body.blocked.down) {
-            if (this.onGrass) {
+            // impact sound
+            if (this.floorSoundsGrassy) {
                 this.grassImpactSFX.play();
                 this.grassImpactSFX.setSeek(0.25);
             }
@@ -152,6 +170,8 @@ class Player extends Phaser.GameObjects.Sprite {
                 this.stoneImpactSFX.play();
                 this.stoneImpactSFX.setSeek(0.281);
             }
+            // impact particles
+            this.impactParticles.explode(this.IMPACT_PARTICLE_COUNT);
             this.makeImpactWhenLanding = false;
         }
         else if (!this.body.blocked.down) {

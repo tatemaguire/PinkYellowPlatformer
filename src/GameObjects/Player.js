@@ -34,13 +34,13 @@ class Player extends Phaser.GameObjects.Sprite {
         this.makeImpactWhenLanding = false;
 
         // footsteps
-        this.footstepMaxVolume = 0.4;
+        this.footstepMaxVolume = 0.15;
         let footstepsConfig = {loop: true, volume: this.footstepMaxVolume, rate: 2}
         this.grassFootstepsSFX = this.scene.sound.add('grassFootsteps', footstepsConfig);
         this.stoneFootstepsSFX = this.scene.sound.add('stoneFootsteps', footstepsConfig);
 
         // impact sound
-        let impactConfig = {volume: 0.7, rate: 2};
+        let impactConfig = {volume: 0.25, rate: 2};
         this.grassImpactSFX = this.scene.sound.add('grassFootsteps', impactConfig);
         this.stoneImpactSFX = this.scene.sound.add('stoneFootsteps', impactConfig);
 
@@ -162,6 +162,7 @@ class Player extends Phaser.GameObjects.Sprite {
         // impact
         if (this.makeImpactWhenLanding && this.body.blocked.down) {
             // impact sound
+            this.stoneImpactSFX.setDetune(Math.random() * 500 - 250);
             if (this.floorSoundsGrassy) {
                 this.grassImpactSFX.play();
                 this.grassImpactSFX.setSeek(0.25);

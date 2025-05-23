@@ -14,12 +14,13 @@ class Load extends Phaser.Scene {
 
         this.load.bitmapFont('mini-square-mono', 'fonts/Kenney-Mini-Square-Mono.png', 'fonts/Kenney-Mini-Square-Mono.xml');
 
-        this.load.audio('player-death', 'audio/death.wav');
-        this.load.audio('swap-color', 'audio/swapColor.wav');
-        this.load.audio('get-coin', 'audio/getCoin.wav');
-        this.load.audio('jump', 'audio/jump.wav');
-        this.load.audio('grassFootsteps', 'audio/grassFootsteps.wav');
-        this.load.audio('stoneFootsteps', 'audio/stoneFootsteps.wav');
+        this.load.setPath('./assets/audio/bitcrushed/');
+        this.load.audio('player-death', 'death.wav');
+        this.load.audio('swap-color', 'swapColor.wav');
+        this.load.audio('get-coin', 'getCoin.wav');
+        this.load.audio('jump', 'jump.wav');
+        this.load.audio('grassFootsteps', 'grassFootsteps.wav');
+        this.load.audio('stoneFootsteps', 'stoneFootsteps.wav');
     }
 
     create() {

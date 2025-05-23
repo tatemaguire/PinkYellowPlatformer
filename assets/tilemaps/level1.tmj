@@ -176,8 +176,8 @@
                  "type":"",
                  "visible":true,
                  "width":8,
-                 "x":40,
-                 "y":64
+                 "x":24,
+                 "y":32
                 }],
          "opacity":1,
          "type":"objectgroup",

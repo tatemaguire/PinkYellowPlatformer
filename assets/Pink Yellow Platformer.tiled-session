@@ -24,11 +24,11 @@
             "scaleInDock": 1.3414
         },
         "level1.tmx": {
-            "scale": 2.4426,
-            "selectedLayer": 3,
+            "scale": 4.7621,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 129.16564316711703,
-                "y": 127.52804388766069
+                "x": 68.56218895025305,
+                "y": 61.00249889754521
             }
         },
         "level1.tmx#Pico-8-Platformer": {

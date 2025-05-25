@@ -14,6 +14,8 @@ class Load extends Phaser.Scene {
 
         this.load.bitmapFont('mini-square-mono', 'fonts/Kenney-Mini-Square-Mono.png', 'fonts/Kenney-Mini-Square-Mono.xml');
 
+        this.load.image('titlescreen', 'sprites/titleScreen.png');
+
         this.load.setPath('./assets/audio/bitcrushed/');
         this.load.audio('player-death', 'death.wav');
         this.load.audio('swap-color', 'swapColor.wav');
@@ -24,7 +26,7 @@ class Load extends Phaser.Scene {
     }
 
     create() {
-        this.scene.start('level1');
+        this.scene.start('title');
 
         this.anims.create({
             key: 'walk',

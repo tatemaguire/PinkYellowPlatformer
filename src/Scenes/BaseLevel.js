@@ -55,7 +55,14 @@ class BaseLevel extends Phaser.Scene {
             this.my.sprite.player.floorSoundsGrassy = Boolean(tile.properties.soundsGrassy);
             this.my.sprite.player.floorEmitsStone = Boolean(tile.properties.emitsStoneParticles);
         }
-        this.my.collider.playerTerrain = this.physics.add.collider(this.my.sprite.player, this.my.terrainLayer, playerTileCollide);
+        let playerTileProcessCollide = (player, tile) => {
+            if (tile.properties.oneway) {
+                let playerFeetY = player.y + player.displayWidth/2;
+                return playerFeetY <= tile.pixelY;
+            }
+            return true;
+        }
+        this.my.collider.playerTerrain = this.physics.add.collider(this.my.sprite.player, this.my.terrainLayer, playerTileCollide, playerTileProcessCollide);
         
         // set up camera
         this.cameras.main.startFollow(this.my.sprite.player, true, 0.15, 1);

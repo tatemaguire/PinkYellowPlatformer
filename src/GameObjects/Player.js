@@ -16,6 +16,9 @@ class Player extends Phaser.GameObjects.Sprite {
         this.TURN_ACCELERATION = 1000;
         this.DRAG = 1200;
         this.MAX_VELOCITY = 80;
+        this.MAX_SLIDE_VELOCITY = 20;
+        this.TERMINAL_VELOCITY = 500;
+        this.WALL_JUMP_HORIZONTAL_VELOCITY = 80;
         this.JUMP_VELOCITY = 170;
         this.JUMP_CANCEL_DECELERATION = 3000;
 
@@ -28,6 +31,9 @@ class Player extends Phaser.GameObjects.Sprite {
         this.playerRestStartTime = 2500; // ms, when to start rest animation
 
         this.dying = false;
+        this.slidingDownWall = false;
+        this.lockedMovingRight = false;
+        this.lockedMovingLeft = false;
 
         this.floorSoundsGrassy = false;
         this.floorEmitsStone = false;
@@ -57,6 +63,21 @@ class Player extends Phaser.GameObjects.Sprite {
         this.scene.add.existing(this.impactParticles);
         this.impactParticles.startFollow(this, 0, 4);
         this.impactParticles.stop();
+
+        // wall slide particles
+        this.wallSlideParticleConfig = {
+            frame: ['White-Small0', 'White-Large0'],
+            rotate: [0, 90, 180, 270],
+            speed: {min:10, max: 40},
+            gravityY: 200,
+            lifespan: {min: 150, max: 300},
+            angle: {min: -110, max: -70},
+            frequency: 80
+        };
+        this.wallSlideParticles = new Phaser.GameObjects.Particles.ParticleEmitter(this.scene, 0, 0, 'particles', this.wallSlideParticleConfig);
+        this.scene.add.existing(this.wallSlideParticles);
+        this.wallSlideParticles.startFollow(this, 0, 2);
+        this.wallSlideParticles.stop();
     }
 
     kill() {
@@ -103,15 +124,90 @@ class Player extends Phaser.GameObjects.Sprite {
             this.body.setDragX(this.DRAG);
         }
 
-        // jumping
-        if (this.body.blocked.down && this.zKey.isDown) {
-            this.body.setVelocityY(-this.JUMP_VELOCITY);
-            let detune = Math.random()*200 - 100;
-            let volume = Math.random()*0.3 + 0.5;
-            this.scene.sound.play('jump', {detune: detune, volume: volume});
-            this.impactParticles.explode(this.IMPACT_PARTICLE_COUNT);
+        // correcting lockedMovingRight and left when at the top of jump arc
+        if (this.lockedMovingRight && this.body.velocity.y > 0) {
+            this.body.setMaxVelocityX(this.MAX_VELOCITY);
+            this.lockedMovingRight = false;
         }
-        else if (!this.body.blocked.down && !this.zKey.isDown && this.body.velocity.y < 0) {
+        if (this.lockedMovingLeft && this.body.velocity.y > 0) {
+            this.body.setMaxVelocityX(this.MAX_VELOCITY);
+            this.lockedMovingLeft = false;
+        }
+
+        // lock velocity after wall jumping
+        if (this.lockedMovingRight && this.body.velocity.x < this.MAX_VELOCITY) {
+            this.body.setVelocityX(this.MAX_VELOCITY);
+        }
+        if (this.lockedMovingLeft && this.body.velocity.x > -this.MAX_VELOCITY) {
+            this.body.setVelocityX(-this.MAX_VELOCITY);
+        }
+
+        // wall sliding
+        if (!this.body.blocked.down && (this.body.blocked.left || this.body.blocked.right)) {
+            if (this.body.velocity.y > 0) {
+                this.slidingDownWall = true;
+                this.body.setMaxVelocityY(this.MAX_SLIDE_VELOCITY);
+                if (this.body.blocked.left) {
+                    this.wallSlideParticles.followOffset.x = -4;
+                    // this.wallSlideParticleConfig.angle = {min: -90, max: -60};
+                    // this.wallSlideParticles.setConfig(this.wallSlideParticleConfig);
+                }
+                else {
+                    this.wallSlideParticles.followOffset.x = 4;
+                    // this.wallSlideParticleConfig.angle = {min: -120, max: -90};
+                    // this.wallSlideParticles.setConfig(this.wallSlideParticleConfig);
+                }
+                this.wallSlideParticles.start();
+            }
+            else {
+                this.slidingDownWall = false;
+                this.body.setMaxVelocityY(this.TERMINAL_VELOCITY);
+            }
+        }
+        else {
+            this.slidingDownWall = false;
+            this.body.setMaxVelocityY(this.TERMINAL_VELOCITY);
+            this.wallSlideParticles.stop();
+        }
+
+        // jumping
+        if (Phaser.Input.Keyboard.JustDown(this.zKey)) {
+            let jumping = true;
+            if (this.body.blocked.down) {
+                // jump
+                this.body.setVelocityY(-this.JUMP_VELOCITY);
+                this.impactParticles.followOffset.x = 0;
+                this.impactParticles.explode(this.IMPACT_PARTICLE_COUNT);
+            }
+            else if (this.body.blocked.left) {
+                // wall jump from left wall
+                this.body.setMaxVelocity(this.WALL_JUMP_HORIZONTAL_VELOCITY, this.TERMINAL_VELOCITY);
+                this.body.setVelocityX(this.WALL_JUMP_HORIZONTAL_VELOCITY);
+                this.body.setVelocityY(-this.JUMP_VELOCITY);
+                this.lockedMovingRight = true;
+                this.impactParticles.followOffset.x = -4;
+                this.impactParticles.explode(this.IMPACT_PARTICLE_COUNT);
+            }
+            else if (this.body.blocked.right) {
+                // wall jump from right wall
+                this.body.setMaxVelocity(this.WALL_JUMP_HORIZONTAL_VELOCITY, this.TERMINAL_VELOCITY);
+                this.body.setVelocityX(-this.WALL_JUMP_HORIZONTAL_VELOCITY);
+                this.body.setVelocityY(-this.JUMP_VELOCITY);
+                this.lockedMovingLeft = true;
+                this.impactParticles.followOffset.x = 4;
+                this.impactParticles.explode(this.IMPACT_PARTICLE_COUNT);
+            }
+            else {
+                jumping = false;
+            }
+
+            if (jumping) {
+                let detune = Math.random()*200 - 100;
+                let volume = Math.random()*0.3 + 0.5;
+                this.scene.sound.play('jump', {detune: detune, volume: volume});
+            }
+        }
+        else if (!this.zKey.isDown && !this.body.blocked.down && this.body.velocity.y < 0) {
             this.body.setAccelerationY(this.JUMP_CANCEL_DECELERATION);
         }
         else {
@@ -119,7 +215,11 @@ class Player extends Phaser.GameObjects.Sprite {
         }
 
         // choose animation
-        if (!this.body.blocked.down) {
+        if (this.slidingDownWall) {
+            this.playerRestTimer = 0;
+            this.anims.play('slide');
+        }
+        else if (!this.body.blocked.down) {
             this.playerRestTimer = 0;
             this.anims.play('jump');
         }
@@ -180,10 +280,10 @@ class Player extends Phaser.GameObjects.Sprite {
         }
 
         // choose direction
-        if (this.body.velocity.x < 0) {
+        if (this.body.velocity.x < -0.0001) {
             this.flipX = true;
         }
-        else if (this.body.velocity.x > 0) {
+        else if (this.body.velocity.x > 0.0001) {
             this.flipX = false;
         }
     }

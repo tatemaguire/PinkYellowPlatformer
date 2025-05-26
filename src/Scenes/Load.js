@@ -68,6 +68,14 @@ class Load extends Phaser.Scene {
         });
 
         this.anims.create({
+            key: 'slide',
+            frameRate: 1, 
+            frames: [
+                {key: 'player-anim', frame: 6}
+            ]
+        });
+
+        this.anims.create({
             key: 'die',
             frameRate: 8,
             defaultTextureKey: 'pico-8-platformer',

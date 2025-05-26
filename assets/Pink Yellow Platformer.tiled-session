@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "level1.tmx",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
@@ -25,10 +25,10 @@
         },
         "level1.tmx": {
             "scale": 3.5519,
-            "selectedLayer": 4,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 357.9774205354881,
-                "y": 94.73802753455898
+                "x": 53.63326670232833,
+                "y": 98.39804048537404
             }
         },
         "level1.tmx#Pico-8-Platformer": {
@@ -44,6 +44,7 @@
     "map.tileWidth": 8,
     "map.width": 90,
     "openFiles": [
+        "level1.tmx"
     ],
     "project": "Pink Yellow Platformer.tiled-project",
     "property.type": "bool",

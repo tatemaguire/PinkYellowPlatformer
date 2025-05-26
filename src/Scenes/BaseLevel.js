@@ -23,7 +23,7 @@ class BaseLevel extends Phaser.Scene {
         // create keybindsd
         this.leftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         this.rightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-        this.zKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+        this.zKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         this.cKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C);
 
         // make map layers
@@ -56,6 +56,12 @@ class BaseLevel extends Phaser.Scene {
             this.my.sprite.player.floorEmitsStone = Boolean(tile.properties.emitsStoneParticles);
         }
         let playerTileProcessCollide = (player, tile) => {
+            if (tile.properties.collidesPinkOnly || tile.properties.collidesYellowOnly) {
+                tile.faceLeft = true;
+                tile.faceRight = true;
+                tile.faceBottom = true;
+                tile.faceTop = true;
+            }
             if (tile.properties.oneway) {
                 let playerFeetY = player.y + player.displayWidth/2;
                 return playerFeetY <= tile.pixelY;
@@ -65,7 +71,7 @@ class BaseLevel extends Phaser.Scene {
         this.my.collider.playerTerrain = this.physics.add.collider(this.my.sprite.player, this.my.terrainLayer, playerTileCollide, playerTileProcessCollide);
         
         // set up camera
-        this.cameras.main.startFollow(this.my.sprite.player, true, 0.15, 1);
+        this.cameras.main.startFollow(this.my.sprite.player, true, 0.15, 0.03);
         this.cameras.main.setBounds(0, 0, this.levelConfig.width*8, this.levelConfig.height*8);
         this.cameras.main.setRoundPixels(true);
 

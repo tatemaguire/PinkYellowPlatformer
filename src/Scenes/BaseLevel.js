@@ -23,7 +23,9 @@ class BaseLevel extends Phaser.Scene {
         // create keybindsd
         this.leftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         this.rightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-        this.zKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+        this.upKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+        this.zKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+        this.xKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
         this.cKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C);
 
         // make map layers
@@ -35,7 +37,7 @@ class BaseLevel extends Phaser.Scene {
         this.my.terrainLayer = this.my.map.createLayer('Terrain', this.my.tileset, 0, 0);
         this.my.coinLayer = this.my.map.createLayer('Coins', this.my.tileset, 0, 0);
 
-        // set up terrain collision and platforms
+        // set up terrain collision
         this.my.terrainLayer.forEachTile((tile) => {
             if (tile.properties.collides || tile.properties.collidesYellowOnly) {
                 tile.setCollision(true, true, true, true);
@@ -45,9 +47,9 @@ class BaseLevel extends Phaser.Scene {
 
         // create player
         let playerSpawn = this.my.map.findObject('Objects', (obj) => obj.name == 'PlayerSpawn');
-        this.my.sprite.player = new Player(this, playerSpawn.x+4, playerSpawn.y+4, this.leftKey, this.rightKey, this.zKey);
+        this.my.sprite.player = new Player(this, playerSpawn.x+4, playerSpawn.y+4, this.leftKey, this.rightKey, this.zKey, this.upKey);
 
-        // create player/world collider
+        // create player/terrain collider
         let playerTileCollide = (player, tile) => {
             if (tile.properties.deadly) {
                 this.my.sprite.player.kill();
@@ -56,12 +58,6 @@ class BaseLevel extends Phaser.Scene {
             this.my.sprite.player.floorEmitsStone = Boolean(tile.properties.emitsStoneParticles);
         }
         let playerTileProcessCollide = (player, tile) => {
-            if (tile.properties.collidesPinkOnly || tile.properties.collidesYellowOnly) {
-                tile.faceLeft = true;
-                tile.faceRight = true;
-                tile.faceBottom = true;
-                tile.faceTop = true;
-            }
             if (tile.properties.oneway) {
                 let playerFeetY = player.y + player.displayWidth/2;
                 return playerFeetY <= tile.pixelY;
@@ -225,8 +221,8 @@ class BaseLevel extends Phaser.Scene {
     update(time, delta) {
         this.my.sprite.player.update(time, delta);
 
-        // swap colors when player presses C
-        if (Phaser.Input.Keyboard.JustDown(this.cKey)) {
+        // swap colors when player presses X/C
+        if (Phaser.Input.Keyboard.JustDown(this.xKey) || Phaser.Input.Keyboard.JustDown(this.cKey)) {
             this.swapTerrainColor();
         }
     }

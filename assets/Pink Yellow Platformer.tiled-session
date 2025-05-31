@@ -9,7 +9,7 @@
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "": {
-            "scaleInDock": 3.4349,
+            "scaleInDock": 3.7686,
             "scaleInEditor": 3.7229
         },
         "/Users/tatemaguire/Desktop/cmpm120/Pathfinder/assets/tiny-town-tileset.tmx": {
@@ -34,9 +34,12 @@
         "/Users/tatemaguire/Desktop/cmpm120/PlatformImprovement/assets/platformer-level-1.tmx#kenny_tilemap_packed": {
             "scaleInDock": 1.3414
         },
+        "Pico-8-Platformer.tsx": {
+            "scaleInEditor": 5.3204
+        },
         "level1.tmx": {
             "scale": 3.0962,
-            "selectedLayer": 3,
+            "selectedLayer": 0,
             "viewCenter": {
                 "x": 539.2093534009431,
                 "y": 101.25314902138106
@@ -45,10 +48,20 @@
         "level1.tmx#Pico-8-Platformer": {
             "scaleInDock": 3.7686,
             "scaleInEditor": 3.7229
+        },
+        "openLevel.tmx": {
+            "scale": 0.7798,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 337.90715568094384,
+                "y": 332.7776352911003
+            }
         }
     },
-    "last.exportedFilePath": "/Users/tatemaguire/Desktop/cmpm120/PlatformImprovement/assets",
+    "last.exportedFilePath": "/Users/tatemaguire/Desktop/cmpm120/PinkYellowPlatformer/assets/tilemaps",
+    "last.externalTilesetPath": "/Users/tatemaguire/Desktop/cmpm120/PinkYellowPlatformer/assets",
     "last.imagePath": "/Users/tatemaguire/Desktop/cmpm120/PinkYellowPlatformer/assets/sprites",
+    "map.height": 90,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "map.lastUsedFormat": "tmx",
     "map.tileHeight": 8,
@@ -59,6 +72,7 @@
     "project": "Pink Yellow Platformer.tiled-project",
     "property.type": "bool",
     "recentFiles": [
+        "Pico-8-Platformer.tsx",
         "level1.tmx",
         "/Users/tatemaguire/Desktop/cmpm120/Pathfinder/assets/tiny-town-tileset.tmx",
         "/Users/tatemaguire/Desktop/cmpm120/PlatformImprovement/assets/platformer-level-1.tmx"

@@ -32,6 +32,8 @@ class Player extends Phaser.GameObjects.Sprite {
         this.playerRestStartTime = 2500; // ms, when to start rest animation
 
         this.dying = false;
+        this.nextToLeftWall = false;
+        this.nextToRightWall = false;
         this.slidingDownWall = false;
         this.lockedMovingRight = false;
         this.lockedMovingLeft = false;
@@ -79,12 +81,19 @@ class Player extends Phaser.GameObjects.Sprite {
         this.scene.add.existing(this.wallSlideParticles);
         this.wallSlideParticles.startFollow(this, 0, 2);
         this.wallSlideParticles.stop();
+
+        // TODO: try to make this wall detection happen
+        // let leftSide = this.scene.physics.add.image(x, y);
+        // leftSide.displayHeight = 8;
+        // leftSide.displayWidth = 8;
+        // console.log(leftSide);
     }
 
     kill() {
         if (this.dying) return;
         this.dying = true;
         this.body.stop();
+        this.body.setAllowGravity(false);
 
         this.scene.sound.play('player-death', {volume: 1});
         this.anims.play('die');
@@ -143,20 +152,24 @@ class Player extends Phaser.GameObjects.Sprite {
             this.body.setVelocityX(-this.MAX_VELOCITY);
         }
 
+        // next to wall detection
+        if (this.body.blocked.left) this.nextToLeftWall = true;
+        if (this.body.blocked.right) this.nextToRightWall = true;
+        if (this.body.velocity.x !== 0) {
+            this.nextToLeftWall = false;
+            this.nextToRightWall = false;
+        }
+
         // wall sliding
         if (!this.body.blocked.down && (this.body.blocked.left || this.body.blocked.right)) {
             if (this.body.velocity.y > 0) {
                 this.slidingDownWall = true;
                 this.body.setMaxVelocityY(this.MAX_SLIDE_VELOCITY);
-                if (this.body.blocked.left) {
+                if (this.nextToLeftWall) {
                     this.wallSlideParticles.followOffset.x = -4;
-                    // this.wallSlideParticleConfig.angle = {min: -90, max: -60};
-                    // this.wallSlideParticles.setConfig(this.wallSlideParticleConfig);
                 }
                 else {
                     this.wallSlideParticles.followOffset.x = 4;
-                    // this.wallSlideParticleConfig.angle = {min: -120, max: -90};
-                    // this.wallSlideParticles.setConfig(this.wallSlideParticleConfig);
                 }
                 this.wallSlideParticles.start();
             }
@@ -180,7 +193,7 @@ class Player extends Phaser.GameObjects.Sprite {
                 this.impactParticles.followOffset.x = 0;
                 this.impactParticles.explode(this.IMPACT_PARTICLE_COUNT);
             }
-            else if (this.body.blocked.left) {
+            else if (this.nextToLeftWall) {
                 // wall jump from left wall
                 this.body.setMaxVelocity(this.WALL_JUMP_HORIZONTAL_VELOCITY, this.TERMINAL_VELOCITY);
                 this.body.setVelocityX(this.WALL_JUMP_HORIZONTAL_VELOCITY);
@@ -189,7 +202,7 @@ class Player extends Phaser.GameObjects.Sprite {
                 this.impactParticles.followOffset.x = -4;
                 this.impactParticles.explode(this.IMPACT_PARTICLE_COUNT);
             }
-            else if (this.body.blocked.right) {
+            else if (this.nextToRightWall) {
                 // wall jump from right wall
                 this.body.setMaxVelocity(this.WALL_JUMP_HORIZONTAL_VELOCITY, this.TERMINAL_VELOCITY);
                 this.body.setVelocityX(-this.WALL_JUMP_HORIZONTAL_VELOCITY);

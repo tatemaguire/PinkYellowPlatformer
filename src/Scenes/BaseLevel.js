@@ -67,7 +67,7 @@ class BaseLevel extends Phaser.Scene {
         this.my.collider.playerTerrain = this.physics.add.collider(this.my.sprite.player, this.my.terrainLayer, playerTileCollide, playerTileProcessCollide);
         
         // set up camera
-        this.cameras.main.startFollow(this.my.sprite.player, true, 0.15, 0.03);
+        this.cameras.main.startFollow(this.my.sprite.player, true, 0.15, 0.10);
         this.cameras.main.setBounds(0, 0, this.levelConfig.width*8, this.levelConfig.height*8);
         this.cameras.main.setRoundPixels(true);
 
@@ -222,7 +222,7 @@ class BaseLevel extends Phaser.Scene {
         this.my.sprite.player.update(time, delta);
 
         // swap colors when player presses X/C
-        if (Phaser.Input.Keyboard.JustDown(this.xKey) || Phaser.Input.Keyboard.JustDown(this.cKey)) {
+        if (PLAYER_ABILITIES.COLOR_SWAP && Phaser.Input.Keyboard.JustDown(this.cKey)) {
             this.swapTerrainColor();
         }
     }

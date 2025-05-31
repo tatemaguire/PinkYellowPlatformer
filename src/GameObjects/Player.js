@@ -19,13 +19,14 @@ class Player extends Phaser.GameObjects.Sprite {
         this.MAX_VELOCITY = 80;
         this.MAX_SLIDE_VELOCITY = 20;
         this.TERMINAL_VELOCITY = 500;
-        this.WALL_JUMP_HORIZONTAL_VELOCITY = 80;
         this.JUMP_VELOCITY = 170;
         this.JUMP_CANCEL_DECELERATION = 3000;
 
         // set up physics
         this.body.setCollideWorldBounds();
         this.body.setMaxVelocityX(this.MAX_VELOCITY);
+        this.body.setSize(6, 7, false);
+        this.body.setOffset(1, 1);
 
         // player rest timer
         this.playerRestTimer = 0;
@@ -81,12 +82,6 @@ class Player extends Phaser.GameObjects.Sprite {
         this.scene.add.existing(this.wallSlideParticles);
         this.wallSlideParticles.startFollow(this, 0, 2);
         this.wallSlideParticles.stop();
-
-        // TODO: try to make this wall detection happen
-        // let leftSide = this.scene.physics.add.image(x, y);
-        // leftSide.displayHeight = 8;
-        // leftSide.displayWidth = 8;
-        // console.log(leftSide);
     }
 
     kill() {
@@ -134,22 +129,18 @@ class Player extends Phaser.GameObjects.Sprite {
             this.body.setDragX(this.DRAG);
         }
 
-        // correcting lockedMovingRight and left when at the top of jump arc
-        if (this.lockedMovingRight && this.body.velocity.y > 0) {
-            this.body.setMaxVelocityX(this.MAX_VELOCITY);
-            this.lockedMovingRight = false;
-        }
-        if (this.lockedMovingLeft && this.body.velocity.y > 0) {
-            this.body.setMaxVelocityX(this.MAX_VELOCITY);
-            this.lockedMovingLeft = false;
-        }
-
-        // lock velocity after wall jumping
-        if (this.lockedMovingRight && this.body.velocity.x < this.MAX_VELOCITY) {
-            this.body.setVelocityX(this.MAX_VELOCITY);
-        }
-        if (this.lockedMovingLeft && this.body.velocity.x > -this.MAX_VELOCITY) {
+        // lockedMoving left and right. turns off after the player reaches the top of their jump arc (velocityY > 0)
+        if (this.lockedMovingLeft) {
             this.body.setVelocityX(-this.MAX_VELOCITY);
+            if (this.body.velocity.y > 0) {
+                this.lockedMovingLeft = false;
+            }
+        }
+        if (this.lockedMovingRight) {
+            this.body.setVelocityX(this.MAX_VELOCITY);
+            if (this.body.velocity.y > 0) {
+                this.lockedMovingRight = false;
+            }
         }
 
         // next to wall detection
@@ -161,7 +152,7 @@ class Player extends Phaser.GameObjects.Sprite {
         }
 
         // wall sliding
-        if (!this.body.blocked.down && (this.body.blocked.left || this.body.blocked.right)) {
+        if (PLAYER_ABILITIES.WALL_JUMP && !this.body.blocked.down && (this.body.blocked.left || this.body.blocked.right)) {
             if (this.body.velocity.y > 0) {
                 this.slidingDownWall = true;
                 this.body.setMaxVelocityY(this.MAX_SLIDE_VELOCITY);
@@ -193,19 +184,19 @@ class Player extends Phaser.GameObjects.Sprite {
                 this.impactParticles.followOffset.x = 0;
                 this.impactParticles.explode(this.IMPACT_PARTICLE_COUNT);
             }
-            else if (this.nextToLeftWall) {
+            else if (PLAYER_ABILITIES.WALL_JUMP && this.nextToLeftWall) {
                 // wall jump from left wall
-                this.body.setMaxVelocity(this.WALL_JUMP_HORIZONTAL_VELOCITY, this.TERMINAL_VELOCITY);
-                this.body.setVelocityX(this.WALL_JUMP_HORIZONTAL_VELOCITY);
+                this.body.setMaxVelocityY(this.TERMINAL_VELOCITY);
+                this.body.setVelocityX(this.MAX_VELOCITY);
                 this.body.setVelocityY(-this.JUMP_VELOCITY);
                 this.lockedMovingRight = true;
                 this.impactParticles.followOffset.x = -4;
                 this.impactParticles.explode(this.IMPACT_PARTICLE_COUNT);
             }
-            else if (this.nextToRightWall) {
+            else if (PLAYER_ABILITIES.WALL_JUMP && this.nextToRightWall) {
                 // wall jump from right wall
-                this.body.setMaxVelocity(this.WALL_JUMP_HORIZONTAL_VELOCITY, this.TERMINAL_VELOCITY);
-                this.body.setVelocityX(-this.WALL_JUMP_HORIZONTAL_VELOCITY);
+                this.body.setMaxVelocityY(this.TERMINAL_VELOCITY);
+                this.body.setVelocityX(-this.MAX_VELOCITY);
                 this.body.setVelocityY(-this.JUMP_VELOCITY);
                 this.lockedMovingLeft = true;
                 this.impactParticles.followOffset.x = 4;

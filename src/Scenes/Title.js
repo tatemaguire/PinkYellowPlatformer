@@ -1,3 +1,9 @@
+let PLAYER_ABILITIES = {
+    WALL_JUMP: false,
+    COLOR_SWAP: false,
+    DASH: false
+};
+
 class Title extends Phaser.Scene {
     constructor() {
         super('title');

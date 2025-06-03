@@ -2,7 +2,7 @@ class Player extends Phaser.GameObjects.Sprite {
     static texture = 'pico-8-platformer';
     static frame = 91;
 
-    constructor(scene, x, y, leftKey, rightKey, zKey, upKey) {
+    constructor(scene, x, y, leftKey, rightKey, zKey) {
         super(scene, x, y, Player.texture, Player.frame);
         this.scene.physics.add.existing(this, 0);
         this.scene.add.existing(this);
@@ -10,7 +10,6 @@ class Player extends Phaser.GameObjects.Sprite {
         this.leftKey = leftKey;
         this.rightKey = rightKey;
         this.zKey = zKey;
-        this.upKey = upKey;
 
         // design variables
         this.ACCELERATION = 400;
@@ -151,6 +150,7 @@ class Player extends Phaser.GameObjects.Sprite {
             this.nextToRightWall = false;
         }
 
+        
         // wall sliding
         if (PLAYER_ABILITIES.WALL_JUMP && !this.body.blocked.down && (this.body.blocked.left || this.body.blocked.right)) {
             if (this.body.velocity.y > 0) {
@@ -176,7 +176,7 @@ class Player extends Phaser.GameObjects.Sprite {
         }
 
         // jumping
-        if (Phaser.Input.Keyboard.JustDown(this.zKey) || Phaser.Input.Keyboard.JustDown(this.upKey)) {
+        if (Phaser.Input.Keyboard.JustDown(this.zKey)) {
             let jumping = true;
             if (this.body.blocked.down) {
                 // jump
@@ -212,7 +212,7 @@ class Player extends Phaser.GameObjects.Sprite {
                 this.scene.sound.play('jump', {detune: detune, volume: volume});
             }
         }
-        else if (!this.zKey.isDown && !this.upKey.isDown && !this.body.blocked.down && this.body.velocity.y < 0) {
+        else if (!this.zKey.isDown && !this.body.blocked.down && this.body.velocity.y < 0) {
             this.body.setAccelerationY(this.JUMP_CANCEL_DECELERATION);
         }
         else {

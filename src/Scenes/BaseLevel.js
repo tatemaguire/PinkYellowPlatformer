@@ -20,34 +20,45 @@ class BaseLevel extends Phaser.Scene {
         this.physics.world.TIAL_BIAS = 32;
         this.physics.world.setBounds(0, 0, this.levelConfig.width*8, this.levelConfig.height*8);
 
-        // create keybindsd
+        // create keybinds
         this.leftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         this.rightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-        this.upKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         this.zKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
-        this.xKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
         this.cKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C);
 
         // make map layers
         this.my.map = this.add.tilemap(this.levelConfig.mapKey, 8, 8, this.levelConfig.width, this.levelConfig.height);
         this.my.tileset = this.my.map.addTilesetImage('Pico-8-Platformer', 'pico-8-platformer', 8, 8, 2, 4);
-        this.my.skyLayer = this.my.map.createLayer('Sky', this.my.tileset, 0, 0).setScrollFactor(0.8);
+        this.my.skyLayer = this.my.map.createLayer('Sky', this.my.tileset, 0, 0)
+            .setScrollFactor(0.8);
         this.my.wallLayer = this.my.map.createLayer('Wall', this.my.tileset, 0, 0);
         this.my.wallDetailsLayer = this.my.map.createLayer('Wall Details', this.my.tileset, 0, 0);
         this.my.terrainLayer = this.my.map.createLayer('Terrain', this.my.tileset, 0, 0);
-        this.my.coinLayer = this.my.map.createLayer('Coins', this.my.tileset, 0, 0);
 
-        // set up terrain collision
+        // ----------------------------------------------
+        // ------------------ Player --------------------
+        // ----------------------------------------------
+
+        // create player
+        let playerSpawn = this.my.map.findObject('Objects', (obj) => obj.name == 'PlayerSpawn');
+        this.my.sprite.player = new Player(this, playerSpawn.x+4, playerSpawn.y+4, this.leftKey, this.rightKey, this.zKey);
+        
+        // set up camera
+        this.cameras.main.startFollow(this.my.sprite.player, true, 0.15, 0.10, 0, 16);
+        this.cameras.main.setBounds(0, 0, this.levelConfig.width*8, this.levelConfig.height*8);
+        this.cameras.main.setRoundPixels(true);
+
+        // ----------------------------------------------
+        // ------------- Terrain Collision --------------
+        // ----------------------------------------------
+
+        // set collision for terrain tiles
         this.my.terrainLayer.forEachTile((tile) => {
             if (tile.properties.collides || tile.properties.collidesYellowOnly) {
                 tile.setCollision(true, true, true, true);
             }
             if (tile.properties.collidesPinkOnly) tile.setAlpha(0);
         });
-
-        // create player
-        let playerSpawn = this.my.map.findObject('Objects', (obj) => obj.name == 'PlayerSpawn');
-        this.my.sprite.player = new Player(this, playerSpawn.x+4, playerSpawn.y+4, this.leftKey, this.rightKey, this.zKey, this.upKey);
 
         // create player/terrain collider
         let playerTileCollide = (player, tile) => {
@@ -65,14 +76,13 @@ class BaseLevel extends Phaser.Scene {
             return true;
         }
         this.my.collider.playerTerrain = this.physics.add.collider(this.my.sprite.player, this.my.terrainLayer, playerTileCollide, playerTileProcessCollide);
-        
-        // set up camera
-        this.cameras.main.startFollow(this.my.sprite.player, true, 0.15, 0.10);
-        this.cameras.main.setBounds(0, 0, this.levelConfig.width*8, this.levelConfig.height*8);
-        this.cameras.main.setRoundPixels(true);
+
+        // ----------------------------------------------
+        // ------------------ Coins ---------------------
+        // ----------------------------------------------
 
         // create coins
-        this.my.coins = this.my.coinLayer.createFromTiles(89, -1);
+        this.my.coins = this.my.terrainLayer.createFromTiles(89, -1);
         for (let coin of this.my.coins) {
             coin.setTexture('pico-8-platformer', 88);
             coin.x += 4;
@@ -91,10 +101,17 @@ class BaseLevel extends Phaser.Scene {
         }
         this.my.collider.playerCoin = this.physics.add.overlap(this.my.sprite.player, this.my.coins, playerCoinCollide);
 
+        // ----------------------------------------------
+        // ---------- Leaf Particle Emitters ------------
+        // ----------------------------------------------
+
         // create leaf particles emit zone
         let leafParticleZone = this.cameras.main.getBounds();
-        leafParticleZone.x -= 16;
-        leafParticleZone.width += 32;
+        // adjust leaf particle zone so that leaves can spawn off screen to the left
+        // this means that even though they can float down at up to a 45 degree angle,
+        // they will still fill out the lower left corner of the map
+        leafParticleZone.x -= leafParticleZone.height;
+        leafParticleZone.width += leafParticleZone.height;
 
         // create leaf particles
         let leafCount = (leafParticleZone.width * leafParticleZone.height) / 1280; // 1 leaf per 320 pixels
@@ -102,7 +119,7 @@ class BaseLevel extends Phaser.Scene {
             frame: 'Yellow-Leaf0',
             speedX: {min: 0, max: 10},
             speedY: 10,
-            lifespan: 20000,
+            lifespan: 2000000, // TODO: confirm this is long enough and particles don't disappear out of nowhere
             rotate: [0, 0, 0, 0, 0, 0, 90],
             maxAliveParticles: leafCount,
             quantity: leafCount,
@@ -133,6 +150,10 @@ class BaseLevel extends Phaser.Scene {
         };
         this.yellowLeafEmitter.clearEmitZones().addEmitZone(topEdgeZone);
         this.pinkLeafEmitter.clearEmitZones().addEmitZone(topEdgeZone);
+
+        // ----------------------------------------------
+        // --------------- Text Objects -----------------
+        // ----------------------------------------------
         
         // create coin count text
         this.my.coinText = this.add.bitmapText(4, -2, 'mini-square-mono', '00')
@@ -166,7 +187,6 @@ class BaseLevel extends Phaser.Scene {
         this.my.winText.setVisible(true);
         this.physics.pause();
         this.input.keyboard.on('keydown', (event) => {
-            // console.log(event);
             if (event.key === 'z') this.restartLevel();
         });
     }

@@ -11,7 +11,7 @@ class OpenLevel extends BaseLevel {
     create() {
         super.create();
 
-        PLAYER_ABILITIES.WALL_JUMP = true;
+        PLAYER_ABILITIES.WALL_JUMP = false;
         PLAYER_ABILITIES.COLOR_SWAP = false;
         PLAYER_ABILITIES.DASH = false;
 

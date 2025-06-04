@@ -4,6 +4,11 @@ let PLAYER_ABILITIES = {
     DASH: false
 };
 
+let PLAYER_STATS = {
+    COINS: 0,
+    KEYS: 0
+};
+
 class Title extends Phaser.Scene {
     constructor() {
         super('title');

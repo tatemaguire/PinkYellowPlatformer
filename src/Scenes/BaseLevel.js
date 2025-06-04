@@ -94,8 +94,8 @@ class BaseLevel extends Phaser.Scene {
 
         // create coin collision
         let playerCoinCollide = (player, coin) => {
-            this.my.score++;
-            this.my.coinText.setText(('00' + this.my.score).slice(-2));
+            PLAYER_STATS.COINS++;
+            this.my.coinText.setText(('00' + PLAYER_STATS.COINS).slice(-2));
             this.sound.play('get-coin');
             coin.destroy();
         }
@@ -173,6 +173,7 @@ class BaseLevel extends Phaser.Scene {
         
         // debug key listener (assigned to D key)
         this.input.keyboard.on('keydown-D', () => {
+            PLAYER_STATS.KEYS++; //TODO: REMOVE
             this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
             this.physics.world.debugGraphic.clear()
         }, this);

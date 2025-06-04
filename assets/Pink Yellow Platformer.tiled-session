@@ -42,7 +42,7 @@
             "scale": 2.3058,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 479.8768323358487,
+                "x": 480.09367681498827,
                 "y": 80.01561280249805
             }
         },
@@ -54,11 +54,11 @@
             "expandedObjectLayers": [
                 6
             ],
-            "scale": 3.0939,
+            "scale": 1.4945,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 359.9017421377549,
-                "y": 357.96244222502344
+                "x": 359.98661759785887,
+                "y": 555.70424891268
             }
         }
     },
@@ -76,7 +76,7 @@
         "level1.tmx"
     ],
     "project": "Pink Yellow Platformer.tiled-project",
-    "property.type": "bool",
+    "property.type": "int",
     "recentFiles": [
         "level1.tmx",
         "openLevel.tmx",

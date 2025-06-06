@@ -106,7 +106,7 @@ class Player extends Phaser.GameObjects.Sprite {
         }
 
         // win if at the right of the world bounds
-        if (this.body.x >= this.scene.physics.world.bounds.right - this.displayWidth*2) {
+        if (this.body.x > this.scene.physics.world.bounds.right - this.displayWidth) {
             this.scene.finishLevel();
         }
 

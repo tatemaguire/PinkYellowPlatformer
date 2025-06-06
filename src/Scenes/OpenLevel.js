@@ -91,6 +91,14 @@ class OpenLevel extends BaseLevel {
         // ------------------ Pickups -------------------
         // ----------------------------------------------
 
+        let pickupParticleConfig = {
+            frame: 'Yellow-Leaf0',
+            speed: 20,
+            angle: {min: -90, max: 90}
+        };
+        this.my.pickupParticles = this.add.particles(0, 0, 'particles', pickupParticleConfig);
+        this.my.pickupParticles.stop();
+
         let pickupFunctions = {
             WallJumpPickup: () => {PLAYER_ABILITIES.WALL_JUMP = true;},
             ColorSwapPickup: () => {PLAYER_ABILITIES.COLOR_SWAP = true;},
@@ -107,6 +115,9 @@ class OpenLevel extends BaseLevel {
             let callback = () => {
                 pickupFunctions[pickupName]();
                 pickup.destroy();
+                this.my.pickupParticles.x = pickup.x;
+                this.my.pickupParticles.y = pickup.y;
+                this.my.pickupParticles.explode(20);
             }
             this.physics.add.overlap(this.my.sprite.player, pickup, callback);
             this.my.pickups.push(pickup);

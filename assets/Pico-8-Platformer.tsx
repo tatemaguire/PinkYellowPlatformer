@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.11.2" name="Pico-8-Platformer" tilewidth="8" tileheight="8" spacing="4" margin="2" tilecount="150" columns="15">
- <image source="sprites/double-extruded-transparent.png" width="180" height="120"/>
+<tileset version="1.10" tiledversion="1.11.2" name="Pico-8-Platformer" tilewidth="8" tileheight="8" tilecount="150" columns="15">
+ <image source="sprites/tilemap_packed.png" trans="000000" width="120" height="80"/>
  <tile id="1">
   <properties>
    <property name="indexModifier" value="7"/>

@@ -28,7 +28,7 @@ class BaseLevel extends Phaser.Scene {
 
         // make map layers
         this.my.map = this.add.tilemap(this.levelConfig.mapKey, 8, 8, this.levelConfig.width, this.levelConfig.height);
-        this.my.tileset = this.my.map.addTilesetImage('Pico-8-Platformer', 'pico-8-platformer', 8, 8, 2, 4);
+        this.my.tileset = this.my.map.addTilesetImage('Pico-8-Platformer', 'pico-8-platformer', 8, 8);
         this.my.skyLayer = this.my.map.createLayer('Sky', this.my.tileset, 0, 0)
             .setScrollFactor(0.8);
         this.my.wallLayer = this.my.map.createLayer('Wall', this.my.tileset, 0, 0);
@@ -173,7 +173,6 @@ class BaseLevel extends Phaser.Scene {
         
         // debug key listener (assigned to D key)
         this.input.keyboard.on('keydown-D', () => {
-            PLAYER_STATS.KEYS++; //TODO: REMOVE
             this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
             this.physics.world.debugGraphic.clear()
         }, this);

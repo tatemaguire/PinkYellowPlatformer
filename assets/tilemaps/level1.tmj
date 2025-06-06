@@ -57,7 +57,6 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":20,
          "id":12,
-         "locked":true,
          "name":"Wall",
          "opacity":1,
          "type":"tilelayer",
@@ -196,12 +195,12 @@
         {
          "columns":15,
          "firstgid":1,
-         "image":"..\/sprites\/double-extruded-transparent.png",
-         "imageheight":120,
-         "imagewidth":180,
-         "margin":2,
+         "image":"..\/sprites\/tilemap_packed.png",
+         "imageheight":80,
+         "imagewidth":120,
+         "margin":0,
          "name":"Pico-8-Platformer",
-         "spacing":4,
+         "spacing":0,
          "tilecount":150,
          "tileheight":8,
          "tiles":[
@@ -1103,7 +1102,8 @@
                          "value":true
                         }]
                 }],
-         "tilewidth":8
+         "tilewidth":8,
+         "transparentcolor":"#000000"
         }],
  "tilewidth":8,
  "type":"map",

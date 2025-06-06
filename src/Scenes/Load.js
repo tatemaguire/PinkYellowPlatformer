@@ -6,7 +6,7 @@ class Load extends Phaser.Scene {
     preload() {
         this.load.setPath('./assets/');
 
-        this.load.spritesheet('pico-8-platformer', 'sprites/double-extruded-transparent.png', {frameWidth: 8, frameHeight: 8, margin: 2, spacing: 4});
+        this.load.spritesheet('pico-8-platformer', 'sprites/tilemap_packed.png', {frameWidth: 8, frameHeight: 8});
         this.load.tilemapTiledJSON('level1-map', 'tilemaps/level1.tmj');
         this.load.tilemapTiledJSON('openLevel-map', 'tilemaps/openLevel.tmj');
 

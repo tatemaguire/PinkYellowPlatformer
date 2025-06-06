@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "openLevel.tmx",
+    "activeFile": "",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
@@ -39,11 +39,11 @@
             "scaleInEditor": 5.3204
         },
         "level1.tmx": {
-            "scale": 2.3058,
-            "selectedLayer": 0,
+            "scale": 2.8693,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 480.09367681498827,
-                "y": 80.01561280249805
+                "x": 315.7564562785348,
+                "y": 121.10967831875371
             }
         },
         "level1.tmx#Pico-8-Platformer": {
@@ -54,11 +54,11 @@
             "expandedObjectLayers": [
                 6
             ],
-            "scale": 1.4945,
-            "selectedLayer": 3,
+            "scale": 2.1256,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 359.98661759785887,
-                "y": 555.70424891268
+                "x": 453.5190063981935,
+                "y": 274.98118178396686
             }
         }
     },
@@ -72,15 +72,13 @@
     "map.tileWidth": 8,
     "map.width": 90,
     "openFiles": [
-        "openLevel.tmx",
-        "level1.tmx"
     ],
     "project": "Pink Yellow Platformer.tiled-project",
     "property.type": "int",
     "recentFiles": [
+        "Pico-8-Platformer.tsx",
         "level1.tmx",
         "openLevel.tmx",
-        "Pico-8-Platformer.tsx",
         "/Users/tatemaguire/Desktop/cmpm120/Pathfinder/assets/tiny-town-tileset.tmx",
         "/Users/tatemaguire/Desktop/cmpm120/PlatformImprovement/assets/platformer-level-1.tmx"
     ],

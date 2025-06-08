@@ -128,7 +128,8 @@ class Player extends Phaser.GameObjects.Sprite {
             this.body.setDragX(this.DRAG);
         }
 
-        // lockedMoving left and right. turns off after the player reaches the top of their jump arc (velocityY > 0)
+        // lockedMoving left and right. 
+        // turns off after the player reaches the top of their jump arc (velocityY > 0)
         if (this.lockedMovingLeft) {
             this.body.setVelocityX(-this.MAX_VELOCITY);
             if (this.body.velocity.y > 0) {
@@ -150,17 +151,18 @@ class Player extends Phaser.GameObjects.Sprite {
             this.nextToRightWall = false;
         }
 
-        
         // wall sliding
-        if (PLAYER_ABILITIES.WALL_JUMP && !this.body.blocked.down && (this.body.blocked.left || this.body.blocked.right)) {
+        if (PLAYER_ABILITIES.WALL_JUMP && !this.body.blocked.down && (this.nextToLeftWall || this.nextToRightWall)) {
             if (this.body.velocity.y > 0) {
                 this.slidingDownWall = true;
                 this.body.setMaxVelocityY(this.MAX_SLIDE_VELOCITY);
                 if (this.nextToLeftWall) {
                     this.wallSlideParticles.followOffset.x = -4;
+                    this.body.setVelocityX(-30); // pushes player into the wall, so 'next to wall detection' can work
                 }
                 else {
                     this.wallSlideParticles.followOffset.x = 4;
+                    this.body.setVelocityX(30); // pushes player into the wall, so 'next to wall detection' can work
                 }
                 this.wallSlideParticles.start();
             }

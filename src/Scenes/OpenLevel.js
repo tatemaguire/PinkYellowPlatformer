@@ -11,8 +11,8 @@ class OpenLevel extends BaseLevel {
     create() {
         super.create();
 
-        PLAYER_ABILITIES.WALL_JUMP = false;
-        PLAYER_ABILITIES.COLOR_SWAP = false;
+        PLAYER_ABILITIES.WALL_JUMP = true;
+        PLAYER_ABILITIES.COLOR_SWAP = true;
         PLAYER_ABILITIES.DASH = false;
 
         // first color swap at the beginning of the game that removes the yellow platform and drops you down
@@ -86,42 +86,6 @@ class OpenLevel extends BaseLevel {
             }
         }
         this.my.collider.keyDoorTrigOverlap = this.physics.add.overlap(this.my.sprite.player, this.my.keyDoorTrigBody, keyDoorTrigOverlapProcess);
-
-        // ----------------------------------------------
-        // ------------------ Pickups -------------------
-        // ----------------------------------------------
-
-        let pickupParticleConfig = {
-            frame: 'Yellow-Leaf0',
-            speed: 20,
-            angle: {min: -90, max: 90}
-        };
-        this.my.pickupParticles = this.add.particles(0, 0, 'particles', pickupParticleConfig);
-        this.my.pickupParticles.stop();
-
-        let pickupFunctions = {
-            WallJumpPickup: () => {PLAYER_ABILITIES.WALL_JUMP = true;},
-            ColorSwapPickup: () => {PLAYER_ABILITIES.COLOR_SWAP = true;},
-            DashPickup: () => {PLAYER_ABILITIES.DASH = true;},
-            Key1: () => {PLAYER_STATS.KEYS++;},
-            Key2: () => {PLAYER_STATS.KEYS++;},
-            Key3: () => {PLAYER_STATS.KEYS++;}
-        }
-
-        this.my.pickups = [];
-        for (let pickupName in pickupFunctions) {
-            let pickup = this.my.map.createFromObjects('Objects', {name: pickupName}, true)[0];
-            this.physics.add.existing(pickup, 1);
-            let callback = () => {
-                pickupFunctions[pickupName]();
-                pickup.destroy();
-                this.my.pickupParticles.x = pickup.x;
-                this.my.pickupParticles.y = pickup.y;
-                this.my.pickupParticles.explode(20);
-            }
-            this.physics.add.overlap(this.my.sprite.player, pickup, callback);
-            this.my.pickups.push(pickup);
-        }
     }
 
     update(time, delta) {

@@ -177,6 +177,51 @@ class BaseLevel extends Phaser.Scene {
             this.physics.world.debugGraphic.clear()
         }, this);
         this.physics.world.drawDebug = false;
+
+        // ----------------------------------------------
+        // ------------------ Pickups -------------------
+        // ----------------------------------------------
+
+        let pickupParticleConfig = {
+            frame: 'Yellow-Leaf0',
+            rotate: [0, 90],
+            speed: {min: 20, max: 60},
+            lifespan: {min: 200, max: 400},
+            gravityY: 80,
+            quantity: 15
+        };
+        this.my.pickupParticles = this.add.particles(0, 0, 'particles', pickupParticleConfig);
+        this.my.pickupParticles.stop();
+
+        let pickupFunctions = {
+            WallJumpPickup: () => {PLAYER_ABILITIES.WALL_JUMP = true;},
+            ColorSwapPickup: () => {PLAYER_ABILITIES.COLOR_SWAP = true;},
+            DashPickup: () => {PLAYER_ABILITIES.DASH = true;},
+            Key1: () => {PLAYER_STATS.KEYS++;},
+            Key2: () => {PLAYER_STATS.KEYS++;},
+            Key3: () => {PLAYER_STATS.KEYS++;}
+        }
+
+        this.my.pickups = [];
+        for (let pickupName in pickupFunctions) {
+            let pickup = this.my.map.createFromObjects('Objects', {name: pickupName}, true)[0];
+            this.physics.add.existing(pickup, 1);
+            let callback = () => {
+                pickupFunctions[pickupName]();
+                pickup.destroy();
+                this.my.pickupParticles.x = pickup.x;
+                this.my.pickupParticles.y = pickup.y;
+                this.my.pickupParticles.explode();
+            }
+            this.physics.add.overlap(this.my.sprite.player, pickup, callback);
+            this.my.pickups.push(pickup);
+        }
+
+        // ----------------------------------------------
+        // ---------------- Checkpoints -----------------
+        // ----------------------------------------------
+
+        
     }
     
     restartLevel() {

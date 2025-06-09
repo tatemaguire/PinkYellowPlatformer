@@ -96,7 +96,7 @@ class BaseLevel extends Phaser.Scene {
         // create coin collision
         let playerCoinCollide = (player, coin) => {
             PLAYER_STATS.COINS++;
-            this.my.coinText.setText(('00' + PLAYER_STATS.COINS).slice(-2));
+            this.my.coinText.setText(('000' + PLAYER_STATS.COINS).slice(-3));
             this.sound.play('get-coin');
             coin.destroy();
         }
@@ -157,7 +157,7 @@ class BaseLevel extends Phaser.Scene {
         // ----------------------------------------------
         
         // create coin count text
-        this.my.coinText = this.add.bitmapText(4, -2, 'mini-square-mono', '00')
+        this.my.coinText = this.add.bitmapText(4, -2, 'mini-square-mono', '000')
             .setFontSize(16)
             .setLetterSpacing(0)
             .setScrollFactor(0);
@@ -194,25 +194,46 @@ class BaseLevel extends Phaser.Scene {
         this.my.pickupParticles = this.add.particles(0, 0, 'particles', pickupParticleConfig);
         this.my.pickupParticles.stop();
 
-        let pickupFunctions = {
-            WallJumpPickup: () => {PLAYER_ABILITIES.WALL_JUMP = true;},
-            ColorSwapPickup: () => {PLAYER_ABILITIES.COLOR_SWAP = true;},
-            DashPickup: () => {PLAYER_ABILITIES.DASH = true;},
-            Key1: () => {PLAYER_ABILITIES.KEYS++;},
-            Key2: () => {PLAYER_ABILITIES.KEYS++;},
-            Key3: () => {PLAYER_ABILITIES.KEYS++;}
+        let pickupConfig = {
+            WallJumpPickup: {
+                function: () => {PLAYER_ABILITIES.WALL_JUMP = true;},
+                displayText: "Wall Jump"
+            },
+            ColorSwapPickup: {
+                function: () => {PLAYER_ABILITIES.COLOR_SWAP = true;},
+                displayText: "Color Swap"
+            },
+            DashPickup: {
+                function: () => {PLAYER_ABILITIES.DASH = true;},
+                displayText: "Dash"
+            },
+            Key1: {function: () => {PLAYER_ABILITIES.KEYS++;}},
+            Key2: {function: () => {PLAYER_ABILITIES.KEYS++;}},
+            Key3: {function: () => {PLAYER_ABILITIES.KEYS++;}}
         }
 
         this.my.pickups = [];
-        for (let pickupName in pickupFunctions) {
+        this.my.pickupTexts = [];
+        for (let pickupName in pickupConfig) {
             let pickup = this.my.map.createFromObjects('Objects', {name: pickupName}, true)[0];
             this.physics.add.existing(pickup, 1);
+
+            let text = null;
+            if (pickupConfig[pickupName].displayText) {
+                text = this.add.bitmapText(pickup.x, pickup.y-4, 'mini-square-mono', pickupConfig[pickupName].displayText)
+                    .setFontSize(8)
+                    .setLetterSpacing(0)
+                    .setOrigin(0.5, 1);
+            }
+            this.my.pickupTexts.push(text);
+
             let callback = () => {
                 if (!pickup.active) return;
                 pickup.active = false;
                 pickup.visible = false;
+                if (text) text.visible = false;
 
-                pickupFunctions[pickupName]();
+                pickupConfig[pickupName].function();
                 this.my.pickupParticles.x = pickup.x;
                 this.my.pickupParticles.y = pickup.y;
                 this.my.pickupParticles.explode();
@@ -264,8 +285,12 @@ class BaseLevel extends Phaser.Scene {
         // reactivate ability pickups
         let i = 0;
         for (let pickup of this.my.pickups) {
-            pickup.active = this.my.checkpointPickupProgress[i];
-            pickup.visible = this.my.checkpointPickupProgress[i];
+            let wasActive = this.my.checkpointPickupProgress[i];
+            pickup.active = wasActive;
+            pickup.visible = wasActive;
+            if (this.my.pickupTexts[i]) {
+                this.my.pickupTexts[i].visible = wasActive;
+            }
             i++;
         }
         this.my.sprite.player.setPosition(this.my.currentCheckpoint.x, this.my.currentCheckpoint.y);

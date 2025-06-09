@@ -14,6 +14,7 @@ class OpenLevel extends BaseLevel {
         PLAYER_ABILITIES.WALL_JUMP = false;
         PLAYER_ABILITIES.COLOR_SWAP = false;
         PLAYER_ABILITIES.DASH = false;
+        this.saveCheckpoint(this.my.playerSpawn); // resave because we changed player abilities
 
         // first color swap at the beginning of the game that removes the yellow platform and drops you down
         // after this first color swap, you can't swap colors until you unlock the ability
@@ -92,6 +93,13 @@ class OpenLevel extends BaseLevel {
             }
         }
         this.my.collider.keyDoorTrigOverlap = this.physics.add.overlap(this.my.sprite.player, this.my.keyDoorTrigBody, keyDoorTrigOverlapProcess);
+    }
+
+    loadLastCheckpoint() {
+        if (this.my.currentCheckpoint.type !== "Sprite") {
+            this.firstColorSwapDone = false;
+        }
+        super.loadLastCheckpoint();
     }
 
     update(time, delta) {

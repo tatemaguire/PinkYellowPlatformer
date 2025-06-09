@@ -1,12 +1,13 @@
 let PLAYER_ABILITIES = {
     WALL_JUMP: false,
     COLOR_SWAP: false,
-    DASH: false
+    DASH: false,
+    KEYS: 0,
+    WORLD_IS_YELLOW: true
 };
 
 let PLAYER_STATS = {
-    COINS: 0,
-    KEYS: 0
+    COINS: 0
 };
 
 class Title extends Phaser.Scene {

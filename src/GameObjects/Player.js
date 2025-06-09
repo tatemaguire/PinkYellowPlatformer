@@ -92,7 +92,9 @@ class Player extends Phaser.GameObjects.Sprite {
         this.scene.sound.play('player-death', {volume: 1});
         this.anims.play('die');
         this.on('animationcomplete-die', () => {
-            this.scene.restartLevel();
+            this.scene.loadLastCheckpoint();
+            this.body.setAllowGravity(true);
+            this.dying = false;
         });
     }
 

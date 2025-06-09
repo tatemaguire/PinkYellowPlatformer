@@ -11,8 +11,8 @@ class OpenLevel extends BaseLevel {
     create() {
         super.create();
 
-        PLAYER_ABILITIES.WALL_JUMP = true;
-        PLAYER_ABILITIES.COLOR_SWAP = true;
+        PLAYER_ABILITIES.WALL_JUMP = false;
+        PLAYER_ABILITIES.COLOR_SWAP = false;
         PLAYER_ABILITIES.DASH = false;
 
         // first color swap at the beginning of the game that removes the yellow platform and drops you down
@@ -41,12 +41,18 @@ class OpenLevel extends BaseLevel {
         this.my.sprite.coinLock = this.my.map.createFromObjects('Objects', {name: 'CoinLock'}, true)[0];
         let coinDoorPrice = this.my.sprite.coinLock.data.get('price');
 
+        // coin door lock text
+        this.my.coinLockText = this.add.bitmapText(this.my.sprite.coinLock.x - 36, this.my.sprite.coinLock.y - 24, 'mini-square-mono', coinDoorPrice)
+            .setFontSize(16)
+            .setLetterSpacing(0);
+
         // coin door trig
         let trigRect = this.my.map.findObject('Objects', (obj) => obj.name == 'CoinDoorTrig');
         this.my.coinDoorTrigBody = this.physics.add.staticBody(trigRect.x, trigRect.y, trigRect.width, trigRect.height);
         let coinDoorTrigOverlapProcess = () => {
             if (PLAYER_STATS.COINS >= coinDoorPrice) {
                 this.my.sprite.coinLock.destroy();
+                this.my.coinLockText.destroy();
                 this.my.coinDoorLayer.setVisible(false);
                 this.my.collider.playerCoinDoor.active = false;
                 this.my.collider.coinDoorTrigOverlap.active = false;
@@ -72,13 +78,13 @@ class OpenLevel extends BaseLevel {
         trigRect = this.my.map.findObject('Objects', (obj) => obj.name == 'KeyDoorTrig');
         this.my.keyDoorTrigBody = this.physics.add.staticBody(trigRect.x, trigRect.y, trigRect.width, trigRect.height);
         let keyDoorTrigOverlapProcess = () => {
-            if (PLAYER_STATS.KEYS >= 1) {
+            if (PLAYER_ABILITIES.KEYS >= 1) {
                 this.my.sprite.keyLock1.destroy();
             }
-            if (PLAYER_STATS.KEYS >= 2) {
+            if (PLAYER_ABILITIES.KEYS >= 2) {
                 this.my.sprite.keyLock2.destroy();
             }
-            if (PLAYER_STATS.KEYS >= 3) {
+            if (PLAYER_ABILITIES.KEYS >= 3) {
                 this.my.sprite.keyLock3.destroy();
                 this.my.keyDoorLayer.setVisible(false);
                 this.my.collider.playerKeyDoor.active = false;

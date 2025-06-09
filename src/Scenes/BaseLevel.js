@@ -9,7 +9,6 @@ class BaseLevel extends Phaser.Scene {
         this.my.sprite = {};
         this.my.collider = {};
         this.my.score = 0;
-        this.isYellow = true;
 
         this.sound.stopAll();
     }
@@ -17,7 +16,7 @@ class BaseLevel extends Phaser.Scene {
     create() {
         // set up physics
         this.physics.world.gravity.y = 500;
-        this.physics.world.TIAL_BIAS = 32;
+        this.physics.world.TILE_BIAS = 8;
         this.physics.world.setBounds(0, 0, this.levelConfig.width*8, this.levelConfig.height*8);
 
         // create keybinds
@@ -40,8 +39,8 @@ class BaseLevel extends Phaser.Scene {
         // ----------------------------------------------
 
         // create player
-        let playerSpawn = this.my.map.findObject('Objects', (obj) => obj.name == 'PlayerSpawn');
-        this.my.sprite.player = new Player(this, playerSpawn.x+4, playerSpawn.y+4, this.leftKey, this.rightKey, this.zKey);
+        this.my.playerSpawn = this.my.map.findObject('Objects', (obj) => obj.name == 'PlayerSpawn');
+        this.my.sprite.player = new Player(this, this.my.playerSpawn.x+4, this.my.playerSpawn.y+4, this.leftKey, this.rightKey, this.zKey);
         
         // set up camera
         this.cameras.main.startFollow(this.my.sprite.player, true, 0.15, 0.10, 0, 16);
@@ -92,6 +91,8 @@ class BaseLevel extends Phaser.Scene {
         }
         this.anims.play('coin', this.my.coins);
 
+        console.log(this.my.coins.length);
+
         // create coin collision
         let playerCoinCollide = (player, coin) => {
             PLAYER_STATS.COINS++;
@@ -114,12 +115,12 @@ class BaseLevel extends Phaser.Scene {
         leafParticleZone.width += leafParticleZone.height;
 
         // create leaf particles
-        let leafCount = (leafParticleZone.width * leafParticleZone.height) / 1280; // 1 leaf per 320 pixels
+        let leafCount = (leafParticleZone.width * leafParticleZone.height) / 1280; // 1 leaf per 1280 pixels
         let leafConfig = {
             frame: 'Yellow-Leaf0',
             speedX: {min: 0, max: 10},
             speedY: 10,
-            lifespan: 2000000, // TODO: confirm this is long enough and particles don't disappear out of nowhere
+            lifespan: (leafParticleZone.height / 10) * 1000, //  height / speedY then convert to milliseconds
             rotate: [0, 0, 0, 0, 0, 0, 90],
             maxAliveParticles: leafCount,
             quantity: leafCount,
@@ -197,9 +198,9 @@ class BaseLevel extends Phaser.Scene {
             WallJumpPickup: () => {PLAYER_ABILITIES.WALL_JUMP = true;},
             ColorSwapPickup: () => {PLAYER_ABILITIES.COLOR_SWAP = true;},
             DashPickup: () => {PLAYER_ABILITIES.DASH = true;},
-            Key1: () => {PLAYER_STATS.KEYS++;},
-            Key2: () => {PLAYER_STATS.KEYS++;},
-            Key3: () => {PLAYER_STATS.KEYS++;}
+            Key1: () => {PLAYER_ABILITIES.KEYS++;},
+            Key2: () => {PLAYER_ABILITIES.KEYS++;},
+            Key3: () => {PLAYER_ABILITIES.KEYS++;}
         }
 
         this.my.pickups = [];
@@ -207,8 +208,11 @@ class BaseLevel extends Phaser.Scene {
             let pickup = this.my.map.createFromObjects('Objects', {name: pickupName}, true)[0];
             this.physics.add.existing(pickup, 1);
             let callback = () => {
+                if (!pickup.active) return;
+                pickup.active = false;
+                pickup.visible = false;
+
                 pickupFunctions[pickupName]();
-                pickup.destroy();
                 this.my.pickupParticles.x = pickup.x;
                 this.my.pickupParticles.y = pickup.y;
                 this.my.pickupParticles.explode();
@@ -221,7 +225,50 @@ class BaseLevel extends Phaser.Scene {
         // ---------------- Checkpoints -----------------
         // ----------------------------------------------
 
-        
+        this.my.checkpointAbilityProgress = {};
+        this.saveCheckpoint(this.my.playerSpawn);
+
+        this.my.checkpoints = this.my.terrainLayer.createFromTiles(74, -1);
+        for (let flag of this.my.checkpoints) {
+            flag.setTexture('pico-8-platformer', 74); // set to plain flagpole
+            flag.setPosition(flag.x + 4, flag.y + 4);
+            this.physics.add.existing(flag, 1);
+            let callback = () => {
+                this.saveCheckpoint(flag);
+            }
+            this.physics.add.overlap(this.my.sprite.player, flag, callback);
+        }
+    }
+
+    saveCheckpoint(checkpoint) {
+        if (this.my.currentCheckpoint && this.my.currentCheckpoint.type === "Sprite") {
+            this.my.currentCheckpoint.setFrame(74); // set to plain flagpole
+        }
+        if (checkpoint.type === "Sprite") {
+            checkpoint.setFrame(73);
+        }
+        this.my.currentCheckpoint = checkpoint;
+        Object.assign(this.my.checkpointAbilityProgress, PLAYER_ABILITIES);
+        this.my.checkpointPickupProgress = [];
+        for (let pickup of this.my.pickups) {
+            this.my.checkpointPickupProgress.push(pickup.active);
+        }
+    }
+
+    // teleports player to last checkpoint, and resets ability and key pickup progress
+    loadLastCheckpoint() {
+        if (PLAYER_ABILITIES.WORLD_IS_YELLOW != this.my.checkpointAbilityProgress.WORLD_IS_YELLOW) {
+            this.swapTerrainColor();
+        }
+        Object.assign(PLAYER_ABILITIES, this.my.checkpointAbilityProgress);
+        // reactivate ability pickups
+        let i = 0;
+        for (let pickup of this.my.pickups) {
+            pickup.active = this.my.checkpointPickupProgress[i];
+            pickup.visible = this.my.checkpointPickupProgress[i];
+            i++;
+        }
+        this.my.sprite.player.setPosition(this.my.currentCheckpoint.x, this.my.currentCheckpoint.y);
     }
     
     restartLevel() {
@@ -269,17 +316,17 @@ class BaseLevel extends Phaser.Scene {
         let detune = Math.random()*200 - 100;
         this.sound.play('swap-color', {detune: detune});
         
-        if (this.isYellow) {
+        if (PLAYER_ABILITIES.WORLD_IS_YELLOW) {
             this.my.terrainLayer.forEachTile(this._swapTileToPink);
             this.yellowLeafEmitter.visible = false;
             this.pinkLeafEmitter.visible = true;
-            this.isYellow = false;
+            PLAYER_ABILITIES.WORLD_IS_YELLOW = false;
         }
         else {
             this.my.terrainLayer.forEachTile(this._swapTileToYellow);
             this.yellowLeafEmitter.visible = true;
             this.pinkLeafEmitter.visible = false;
-            this.isYellow = true;
+            PLAYER_ABILITIES.WORLD_IS_YELLOW = true;
         }
     }
     

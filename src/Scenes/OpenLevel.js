@@ -11,9 +11,9 @@ class OpenLevel extends BaseLevel {
     create() {
         super.create();
 
-        PLAYER_ABILITIES.WALL_JUMP = true;
-        PLAYER_ABILITIES.COLOR_SWAP = true;
-        PLAYER_ABILITIES.DASH = true;
+        PLAYER_ABILITIES.WALL_JUMP = false;
+        PLAYER_ABILITIES.COLOR_SWAP = false;
+        PLAYER_ABILITIES.DASH = false;
         this.saveCheckpoint(this.my.playerSpawn); // resave because we changed player abilities
 
         // first color swap at the beginning of the game that removes the yellow platform and drops you down

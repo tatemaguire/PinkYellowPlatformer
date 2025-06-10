@@ -2,7 +2,7 @@ class Player extends Phaser.GameObjects.Sprite {
     static texture = 'pico-8-platformer';
     static frame = 91;
 
-    constructor(scene, x, y, leftKey, rightKey, zKey) {
+    constructor(scene, x, y, leftKey, rightKey, zKey, xKey) {
         super(scene, x, y, Player.texture, Player.frame);
         this.scene.physics.add.existing(this, 0);
         this.scene.add.existing(this);
@@ -10,6 +10,7 @@ class Player extends Phaser.GameObjects.Sprite {
         this.leftKey = leftKey;
         this.rightKey = rightKey;
         this.zKey = zKey;
+        this.xKey = xKey;
 
         // design variables
         this.ACCELERATION = 400;
@@ -20,6 +21,8 @@ class Player extends Phaser.GameObjects.Sprite {
         this.TERMINAL_VELOCITY = 500;
         this.JUMP_VELOCITY = 170;
         this.JUMP_CANCEL_DECELERATION = 3000;
+        this.DASH_VELOCITY = 200;
+        this.DASH_LENGTH = 24; // pixels
 
         // set up physics
         this.body.setCollideWorldBounds();
@@ -38,6 +41,11 @@ class Player extends Phaser.GameObjects.Sprite {
         this.lockedMovingRight = false;
         this.lockedMovingLeft = false;
 
+        this.dashReady = true;
+        this.dashing = false;
+        this.dashCooldownTimer = 0;
+        this.dashCooldownLength = 400;
+        
         this.floorSoundsGrassy = false;
         this.floorEmitsStone = false;
         this.makeImpactWhenLanding = false;
@@ -221,6 +229,53 @@ class Player extends Phaser.GameObjects.Sprite {
         }
         else {
             this.body.setAccelerationY(0);
+        }
+
+        // update dash
+        if (this.dashing) {
+            if (this.body.velocity.x < 0) this.body.setVelocityX(-this.DASH_VELOCITY);
+            if (this.body.velocity.x > 0) this.body.setVelocityX(this.DASH_VELOCITY);
+
+            // time to dash DASH_LENGTH pixels in milliseconds
+            let dashTimeLength = this.DASH_LENGTH / this.DASH_VELOCITY * 1000;
+            if (this.dashCooldownTimer > dashTimeLength || this.nextToLeftWall || this.nextToRightWall) {
+            // if (Math.abs(this.dashInitialX - this.x) > this.DASH_LENGTH || Math.abs(this.body.velocity.x) < this.DASH_VELOCITY) {
+                this.dashing = false;
+                this.body.setMaxVelocityX(this.MAX_VELOCITY);
+                this.body.setVelocityX(this.body.velocity.x * 0.2);
+                this.body.setAllowGravity(true);
+            }
+        }
+
+        // detect if dash ready
+        this.dashCooldownTimer += delta;
+        if (this.dashCooldownTimer > this.dashCooldownLength && (this.body.blocked.down || this.slidingDownWall)) {
+            this.dashReady = true;
+        }
+
+        // dashing
+        if (Phaser.Input.Keyboard.JustDown(this.xKey) && PLAYER_ABILITIES.DASH && this.dashReady && !this.slidingDownWall) {
+            this.dashReady = false;
+            this.dashCooldownTimer = 0;
+            this.dashing = true;
+            // by default dash in sprite's direction
+            let dashLeft = this.flipX;
+            // if an arrow key is down, dash in that direction instead
+            if (this.leftKey.isDown && !this.rightKey.isDown) dashLeft = true;
+            if (this.rightKey.isDown && !this.leftKey.isDown) dashLeft = false;
+
+            if (dashLeft) {
+                this.body.setMaxVelocityX(this.DASH_VELOCITY);
+                this.body.setVelocity(-this.DASH_VELOCITY, 0);
+                this.body.setAllowGravity(false);
+                this.dashInitialX = this.x;
+            }
+            else {
+                this.body.setMaxVelocityX(this.DASH_VELOCITY);
+                this.body.setVelocity(this.DASH_VELOCITY, 0);
+                this.body.setAllowGravity(false);
+                this.dashInitialX = this.x;
+            }
         }
 
         // choose animation

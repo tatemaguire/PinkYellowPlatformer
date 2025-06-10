@@ -11,9 +11,9 @@ class OpenLevel extends BaseLevel {
     create() {
         super.create();
 
-        PLAYER_ABILITIES.WALL_JUMP = false;
-        PLAYER_ABILITIES.COLOR_SWAP = false;
-        PLAYER_ABILITIES.DASH = false;
+        PLAYER_ABILITIES.WALL_JUMP = true;
+        PLAYER_ABILITIES.COLOR_SWAP = true;
+        PLAYER_ABILITIES.DASH = true;
         this.saveCheckpoint(this.my.playerSpawn); // resave because we changed player abilities
 
         // first color swap at the beginning of the game that removes the yellow platform and drops you down
@@ -43,7 +43,7 @@ class OpenLevel extends BaseLevel {
         let coinDoorPrice = this.my.sprite.coinLock.data.get('price');
 
         // coin door lock text
-        this.my.coinLockText = this.add.bitmapText(this.my.sprite.coinLock.x - 36, this.my.sprite.coinLock.y - 24, 'mini-square-mono', coinDoorPrice)
+        this.my.coinLockText = this.add.bitmapText(this.my.sprite.coinLock.x - 36, this.my.sprite.coinLock.y - 21, 'mini-square-mono', coinDoorPrice)
             .setFontSize(16)
             .setLetterSpacing(0);
 

@@ -23,6 +23,7 @@ class BaseLevel extends Phaser.Scene {
         this.leftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         this.rightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         this.zKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+        this.xKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
         this.cKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C);
 
         // make map layers
@@ -40,7 +41,7 @@ class BaseLevel extends Phaser.Scene {
 
         // create player
         this.my.playerSpawn = this.my.map.findObject('Objects', (obj) => obj.name == 'PlayerSpawn');
-        this.my.sprite.player = new Player(this, this.my.playerSpawn.x+4, this.my.playerSpawn.y+4, this.leftKey, this.rightKey, this.zKey);
+        this.my.sprite.player = new Player(this, this.my.playerSpawn.x+4, this.my.playerSpawn.y+4, this.leftKey, this.rightKey, this.zKey, this.xKey);
         
         // set up camera
         this.cameras.main.startFollow(this.my.sprite.player, true, 0.15, 0.10, 0, 16);
@@ -91,7 +92,7 @@ class BaseLevel extends Phaser.Scene {
         }
         this.anims.play('coin', this.my.coins);
 
-        console.log(this.my.coins.length);
+        console.log('coins: ' + this.my.coins.length);
 
         // create coin collision
         let playerCoinCollide = (player, coin) => {

@@ -9,10 +9,10 @@ class Level1 extends BaseLevel {
     }
 
     create() {
-        super.create();
-
         PLAYER_ABILITIES.WALL_JUMP = true;
         PLAYER_ABILITIES.COLOR_SWAP = true;
         PLAYER_ABILITIES.DASH = true;
+        
+        super.create();
     }
 }

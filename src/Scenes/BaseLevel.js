@@ -48,7 +48,7 @@ class BaseLevel extends Phaser.Scene {
         this.cameras.main.startFollow(this.my.sprite.player, true, 0.15, 0.10, 0, 16);
         this.cameras.main.setBounds(0, 0, this.my.map.widthInPixels, this.my.map.heightInPixels);
         this.cameras.main.setRoundPixels(true);
-        this.cameras.main.setBackgroundColor('#5F574F');
+        this.cameras.main.setBackgroundColor('#5F574F'); // stone color
 
         // ----------------------------------------------
         // ------------- Terrain Collision --------------

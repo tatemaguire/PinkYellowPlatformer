@@ -16,7 +16,7 @@ class Player extends Phaser.GameObjects.Sprite {
         this.ACCELERATION = 400;
         this.TURN_ACCELERATION = 1000;
         this.DRAG = 1200;
-        this.MAX_VELOCITY = 80;
+        this.MAX_VELOCITY = 75;
         this.MAX_SLIDE_VELOCITY = 20;
         this.TERMINAL_VELOCITY = 500;
         this.JUMP_VELOCITY = 170;
@@ -93,10 +93,20 @@ class Player extends Phaser.GameObjects.Sprite {
         let dashParticleConfig = {
             frame: ['White-Small0', 'White-Large0'],
             rotate: [0, 90, 180, 270],
-            lifespan: {min: 150, max: 400},
+            lifespan: {min: 300, max: 600},
             follow: this,
-            speedY: {min: 0, max: 16}, // TODO: make the particles spawn at different y offsets
-            quantity: 2
+            // speedY: {min: -4, max: 4},
+            speedX: {
+                onEmit: (particle) => {
+                    // for some reason I can't do followOffset onEmit so I'm doing it here instead
+                    particle.x += Math.random()*4 - 2;
+                    particle.y += Math.random()*6 - 3;
+                    // still changing speedX though
+                    return this.body.velocity.x * (-0.05);
+                }
+            },
+            quantity: 2,
+            frequency: 5
         };
         this.dashParticles = this.scene.add.particles(0, 0, 'particles', dashParticleConfig)
             .stop();
@@ -265,7 +275,7 @@ class Player extends Phaser.GameObjects.Sprite {
         }
 
         // dashing
-        if (Phaser.Input.Keyboard.JustDown(this.xKey) && PLAYER_ABILITIES.DASH && this.dashReady) {
+        if (Phaser.Input.Keyboard.JustDown(this.xKey) && PLAYER_ABILITIES.DASH && this.dashReady && !this.slidingDownWall) {
             this.dashReady = false;
             this.dashCooldownTimer = 0;
             this.dashing = true;
@@ -278,9 +288,6 @@ class Player extends Phaser.GameObjects.Sprite {
             // if an arrow key is down, dash in that direction instead
             if (this.leftKey.isDown && !this.rightKey.isDown) dashLeft = true;
             if (this.rightKey.isDown && !this.leftKey.isDown) dashLeft = false;
-            // if sliding down a wall, go away from the wall instead
-            if (this.slidingDownWall && this.nextToRightWall) dashLeft = true;
-            if (this.slidingDownWall && this.nextToLeftWall) dashLeft = false;
 
             // camera shake
             this.scene.cameras.main.shake(100, 0.007);

@@ -5,7 +5,24 @@ class OpenLevel extends BaseLevel {
             width: 90,
             height: 140
         };
-        super('openLevel', levelConfig);
+        let pickupConfig = {
+            WallJumpPickup: {
+                function: () => {PLAYER_ABILITIES.WALL_JUMP = true;},
+                displayText: "Wall Jump"
+            },
+            ColorSwapPickup: {
+                function: () => {PLAYER_ABILITIES.COLOR_SWAP = true;},
+                displayText: "Color Swap"
+            },
+            DashPickup: {
+                function: () => {PLAYER_ABILITIES.DASH = true;},
+                displayText: "Dash"
+            },
+            Key1: {function: () => {PLAYER_ABILITIES.KEYS++;}},
+            Key2: {function: () => {PLAYER_ABILITIES.KEYS++;}},
+            Key3: {function: () => {PLAYER_ABILITIES.KEYS++;}}
+        }
+        super('openLevel', levelConfig, pickupConfig);
     }
 
     create() {

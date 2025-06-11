@@ -1,7 +1,8 @@
 class BaseLevel extends Phaser.Scene {
-    constructor(sceneName = 'BaseLevel', levelConfig = {}) {
+    constructor(sceneName = 'BaseLevel', levelConfig = {}, pickupConfig = {}) {
         super(sceneName);
         this.levelConfig = levelConfig;
+        this.pickupConfig = pickupConfig;
     }
 
     init() {
@@ -45,8 +46,9 @@ class BaseLevel extends Phaser.Scene {
         
         // set up camera
         this.cameras.main.startFollow(this.my.sprite.player, true, 0.15, 0.10, 0, 16);
-        this.cameras.main.setBounds(0, 0, this.levelConfig.width*8, this.levelConfig.height*8);
+        this.cameras.main.setBounds(0, 0, this.my.map.widthInPixels, this.my.map.heightInPixels);
         this.cameras.main.setRoundPixels(true);
+        this.cameras.main.setBackgroundColor('#5F574F');
 
         // ----------------------------------------------
         // ------------- Terrain Collision --------------
@@ -195,33 +197,15 @@ class BaseLevel extends Phaser.Scene {
         this.my.pickupParticles = this.add.particles(0, 0, 'particles', pickupParticleConfig);
         this.my.pickupParticles.stop();
 
-        let pickupConfig = {
-            WallJumpPickup: {
-                function: () => {PLAYER_ABILITIES.WALL_JUMP = true;},
-                displayText: "Wall Jump"
-            },
-            ColorSwapPickup: {
-                function: () => {PLAYER_ABILITIES.COLOR_SWAP = true;},
-                displayText: "Color Swap"
-            },
-            DashPickup: {
-                function: () => {PLAYER_ABILITIES.DASH = true;},
-                displayText: "Dash"
-            },
-            Key1: {function: () => {PLAYER_ABILITIES.KEYS++;}},
-            Key2: {function: () => {PLAYER_ABILITIES.KEYS++;}},
-            Key3: {function: () => {PLAYER_ABILITIES.KEYS++;}}
-        }
-
         this.my.pickups = [];
         this.my.pickupTexts = [];
-        for (let pickupName in pickupConfig) {
+        for (let pickupName in this.pickupConfig) {
             let pickup = this.my.map.createFromObjects('Objects', {name: pickupName}, true)[0];
             this.physics.add.existing(pickup, 1);
 
             let text = null;
-            if (pickupConfig[pickupName].displayText) {
-                text = this.add.bitmapText(pickup.x, pickup.y-4, 'mini-square-mono', pickupConfig[pickupName].displayText)
+            if (this.pickupConfig[pickupName].displayText) {
+                text = this.add.bitmapText(pickup.x, pickup.y-4, 'mini-square-mono', this.pickupConfig[pickupName].displayText)
                     .setFontSize(8)
                     .setLetterSpacing(0)
                     .setOrigin(0.5, 1);
@@ -234,7 +218,7 @@ class BaseLevel extends Phaser.Scene {
                 pickup.visible = false;
                 if (text) text.visible = false;
 
-                pickupConfig[pickupName].function();
+                this.pickupConfig[pickupName].function();
                 this.my.pickupParticles.x = pickup.x;
                 this.my.pickupParticles.y = pickup.y;
                 this.my.pickupParticles.explode();

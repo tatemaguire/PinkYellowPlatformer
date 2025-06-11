@@ -21,7 +21,7 @@ class Player extends Phaser.GameObjects.Sprite {
         this.TERMINAL_VELOCITY = 500;
         this.JUMP_VELOCITY = 170;
         this.JUMP_CANCEL_DECELERATION = 3000;
-        this.DASH_VELOCITY = 200;
+        this.DASH_VELOCITY = 160;
         this.DASH_LENGTH = 24; // pixels
 
         // set up physics
@@ -44,7 +44,7 @@ class Player extends Phaser.GameObjects.Sprite {
         this.dashReady = true;
         this.dashing = false;
         this.dashCooldownTimer = 0;
-        this.dashCooldownLength = 400;
+        this.dashCooldownLength = 500;
         
         this.floorSoundsGrassy = false;
         this.floorEmitsStone = false;
@@ -85,10 +85,21 @@ class Player extends Phaser.GameObjects.Sprite {
             angle: {min: -110, max: -70},
             frequency: 80
         };
-        this.wallSlideParticles = new Phaser.GameObjects.Particles.ParticleEmitter(this.scene, 0, 0, 'particles', this.wallSlideParticleConfig);
-        this.scene.add.existing(this.wallSlideParticles);
+        this.wallSlideParticles = this.scene.add.particles(0, 0, 'particles', this.wallSlideParticleConfig);
         this.wallSlideParticles.startFollow(this, 0, 2);
         this.wallSlideParticles.stop();
+
+        // dash particles
+        let dashParticleConfig = {
+            frame: ['White-Small0', 'White-Large0'],
+            rotate: [0, 90, 180, 270],
+            lifespan: {min: 150, max: 400},
+            follow: this,
+            speedY: {min: 0, max: 16}, // TODO: make the particles spawn at different y offsets
+            quantity: 2
+        };
+        this.dashParticles = this.scene.add.particles(0, 0, 'particles', dashParticleConfig)
+            .stop();
     }
 
     kill() {
@@ -239,11 +250,11 @@ class Player extends Phaser.GameObjects.Sprite {
             // time to dash DASH_LENGTH pixels in milliseconds
             let dashTimeLength = this.DASH_LENGTH / this.DASH_VELOCITY * 1000;
             if (this.dashCooldownTimer > dashTimeLength || this.nextToLeftWall || this.nextToRightWall) {
-            // if (Math.abs(this.dashInitialX - this.x) > this.DASH_LENGTH || Math.abs(this.body.velocity.x) < this.DASH_VELOCITY) {
+                // end dash
                 this.dashing = false;
                 this.body.setMaxVelocityX(this.MAX_VELOCITY);
-                this.body.setVelocityX(this.body.velocity.x * 0.2);
                 this.body.setAllowGravity(true);
+                this.dashParticles.stop();
             }
         }
 
@@ -254,15 +265,27 @@ class Player extends Phaser.GameObjects.Sprite {
         }
 
         // dashing
-        if (Phaser.Input.Keyboard.JustDown(this.xKey) && PLAYER_ABILITIES.DASH && this.dashReady && !this.slidingDownWall) {
+        if (Phaser.Input.Keyboard.JustDown(this.xKey) && PLAYER_ABILITIES.DASH && this.dashReady) {
             this.dashReady = false;
             this.dashCooldownTimer = 0;
             this.dashing = true;
+            // cancel locked movement after walljump
+            this.lockedMovingLeft = false;
+            this.lockedMovingRight = false;
+
             // by default dash in sprite's direction
             let dashLeft = this.flipX;
             // if an arrow key is down, dash in that direction instead
             if (this.leftKey.isDown && !this.rightKey.isDown) dashLeft = true;
             if (this.rightKey.isDown && !this.leftKey.isDown) dashLeft = false;
+            // if sliding down a wall, go away from the wall instead
+            if (this.slidingDownWall && this.nextToRightWall) dashLeft = true;
+            if (this.slidingDownWall && this.nextToLeftWall) dashLeft = false;
+
+            // camera shake
+            this.scene.cameras.main.shake(100, 0.007);
+            // particles
+            this.dashParticles.start();
 
             if (dashLeft) {
                 this.body.setMaxVelocityX(this.DASH_VELOCITY);

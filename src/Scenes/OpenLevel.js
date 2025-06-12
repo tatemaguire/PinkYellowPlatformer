@@ -53,6 +53,9 @@ class OpenLevel extends BaseLevel {
         // ---------------- Coin Door -------------------
         // ----------------------------------------------
 
+        // door sounds
+        this.doorOpenSound = this.sound.add('doorOpen', {detune: -100});
+
         // create coin door
         this.my.coinDoorLayer = this.my.map.createLayer('Coin Door', this.my.tileset, 0, 0);
         this.my.coinDoorLayer.setCollisionByProperty({collides: true});
@@ -72,6 +75,7 @@ class OpenLevel extends BaseLevel {
         this.my.coinDoorTrigBody = this.physics.add.staticBody(trigRect.x, trigRect.y, trigRect.width, trigRect.height);
         let coinDoorTrigOverlapProcess = () => {
             if (PLAYER_STATS.COINS >= coinDoorPrice) {
+                this.doorOpenSound.play();
                 this.my.sprite.coinLock.destroy();
                 this.my.coinLockText.destroy();
                 this.my.coinDoorLayer.setVisible(false);
@@ -106,6 +110,7 @@ class OpenLevel extends BaseLevel {
                 this.my.sprite.keyLock2.destroy();
             }
             if (PLAYER_ABILITIES.KEYS >= 3) {
+                this.doorOpenSound.play();
                 this.my.sprite.keyLock3.destroy();
                 this.my.keyDoorLayer.setVisible(false);
                 this.my.collider.playerKeyDoor.active = false;

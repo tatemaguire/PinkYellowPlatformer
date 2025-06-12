@@ -54,11 +54,11 @@
             "expandedObjectLayers": [
                 6
             ],
-            "scale": 3.3933,
+            "scale": 0.6553,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 544.6025992396782,
-                "y": 286.88886924233043
+                "x": 222.79871814436143,
+                "y": 573.0199908438884
             }
         }
     },
@@ -72,13 +72,14 @@
     "map.tileWidth": 8,
     "map.width": 90,
     "openFiles": [
-        "openLevel.tmx"
+        "openLevel.tmx",
+        "Pico-8-Platformer.tsx"
     ],
     "project": "Pink Yellow Platformer.tiled-project",
     "property.type": "int",
     "recentFiles": [
-        "openLevel.tmx",
         "Pico-8-Platformer.tsx",
+        "openLevel.tmx",
         "level1.tmx",
         "/Users/tatemaguire/Desktop/cmpm120/Pathfinder/assets/tiny-town-tileset.tmx",
         "/Users/tatemaguire/Desktop/cmpm120/PlatformImprovement/assets/platformer-level-1.tmx"

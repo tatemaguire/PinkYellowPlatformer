@@ -24,6 +24,13 @@ class Load extends Phaser.Scene {
         this.load.audio('jump', 'jump.wav');
         this.load.audio('grassFootsteps', 'grassFootsteps.wav');
         this.load.audio('stoneFootsteps', 'stoneFootsteps.wav');
+
+        this.load.setPath('./assets/audio');
+        this.load.audio('dash', 'dash.wav');
+        this.load.audio('dashReady', 'dashReady.wav');
+        this.load.audio('pickup', 'pickup2.wav');
+        this.load.audio('checkpoint', 'checkpoint.wav');
+        this.load.audio('doorOpen', 'doorOpen.wav');
     }
 
     create() {

@@ -297,6 +297,7 @@ class Player extends Phaser.GameObjects.Sprite {
         if (!this.dashReadyStage1 && this.dashCooldownTimer > this.dashCooldownStage1Length && this.touchedGroundAfterDash) {
             this.dashReadyStage1 = true;
             this.dashReadyParticles.explode();
+            this.scene.sound.play('dashReady', {volume: 0.1});
             setTimeout(() => {
                 this.dashReadyStage2 = true;
             }, this.dashCooldownStage2Length);
@@ -323,6 +324,10 @@ class Player extends Phaser.GameObjects.Sprite {
             this.scene.cameras.main.shake(100, 0.007);
             // particles
             this.dashParticles.start();
+            // sound
+            let detune = Math.random()*500 - 250;
+            let volume = Math.random()*0.2 + 0.6;
+            this.scene.sound.play('dash', {volume: volume, detune: detune});
 
             if (dashLeft) {
                 this.body.setMaxVelocityX(this.DASH_VELOCITY);

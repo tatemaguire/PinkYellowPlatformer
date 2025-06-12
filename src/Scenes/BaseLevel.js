@@ -43,6 +43,11 @@ class BaseLevel extends Phaser.Scene {
         }, this);
         this.physics.world.drawDebug = false;
 
+        // press R to restart
+        this.input.keyboard.on('keydown-R', () => {
+            this.restartLevel();
+        }, this);
+
         // ----------------------------------------------
         // ------------------ Player --------------------
         // ----------------------------------------------
@@ -112,8 +117,6 @@ class BaseLevel extends Phaser.Scene {
             coin.body.setSize(4, 4);
         }
         this.anims.play('coin', this.my.coins);
-
-        console.log('coins: ' + this.my.coins.length);
 
         // create coin collision
         let playerCoinCollide = (player, coin) => {
@@ -230,6 +233,7 @@ class BaseLevel extends Phaser.Scene {
                 pickup.visible = false;
                 if (text) text.visible = false;
 
+                this.sound.play('pickup');
                 this.pickupConfig[pickupName].function();
                 this.my.pickupParticles.x = pickup.x;
                 this.my.pickupParticles.y = pickup.y;
@@ -252,13 +256,19 @@ class BaseLevel extends Phaser.Scene {
             flag.setPosition(flag.x + 4, flag.y + 4);
             this.physics.add.existing(flag, 1);
             let callback = () => {
-                this.saveCheckpoint(flag);
+                this.saveCheckpoint(flag, true);
             }
             this.physics.add.overlap(this.my.sprite.player, flag, callback);
         }
     }
 
-    saveCheckpoint(checkpoint) {
+    saveCheckpoint(checkpoint, makeSound = false) {
+        if (checkpoint === this.my.currentCheckpoint) return;
+
+        if (makeSound) {
+            this.sound.play('checkpoint', {volume: 0.5});
+        }
+
         if (this.my.currentCheckpoint && this.my.currentCheckpoint.type === "Sprite") {
             this.my.currentCheckpoint.setFrame(74); // set to plain flagpole
         }

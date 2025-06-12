@@ -36,6 +36,13 @@ class BaseLevel extends Phaser.Scene {
         this.my.wallDetailsLayer = this.my.map.createLayer('Wall Details', this.my.tileset, 0, 0);
         this.my.terrainLayer = this.my.map.createLayer('Terrain', this.my.tileset, 0, 0);
 
+        // debug key listener (assigned to D key)
+        this.input.keyboard.on('keydown-D', () => {
+            this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
+            this.physics.world.debugGraphic.clear()
+        }, this);
+        this.physics.world.drawDebug = false;
+
         // ----------------------------------------------
         // ------------------ Player --------------------
         // ----------------------------------------------
@@ -55,17 +62,29 @@ class BaseLevel extends Phaser.Scene {
         // ----------------------------------------------
 
         // set collision for terrain tiles
+        this.my.terrainLayer.setCollisionByProperty({collides: true});
+        this.my.terrainLayer.setCollisionByProperty({collidesYellowOnly: true});
         this.my.terrainLayer.forEachTile((tile) => {
-            if (tile.properties.collides || tile.properties.collidesYellowOnly) {
-                tile.setCollision(true, true, true, true);
-            }
             if (tile.properties.collidesPinkOnly) tile.setAlpha(0);
         });
 
         // create player/terrain collider
         let playerTileCollide = (player, tile) => {
             if (tile.properties.deadly) {
-                this.my.sprite.player.kill();
+                // get the tiles under the player
+                let leftStandingOn = this.my.terrainLayer.getTileAtWorldXY(player.x - player.displayWidth/2-1, player.y + player.displayHeight/2);
+                let rightStandingOn = this.my.terrainLayer.getTileAtWorldXY(player.x + player.displayWidth/2+1, player.y + player.displayHeight/2);
+                // if player is standing on 'tile', then we have to figure out if they are fully standing on it
+                if (leftStandingOn === tile || rightStandingOn === tile) {
+                    // the player only dies if they're fully on a deadly tile
+                    if ((!leftStandingOn || leftStandingOn.properties.deadly) && (!rightStandingOn || rightStandingOn.properties.deadly)) {
+                        this.my.sprite.player.kill();
+                    }
+                }
+                else {
+                    // the player isn't standing on 'tile', so they're colliding with a deadly tile elsewhere -- kill them
+                    this.my.sprite.player.kill();
+                }
             }
             this.my.sprite.player.floorSoundsGrassy = Boolean(tile.properties.soundsGrassy);
             this.my.sprite.player.floorEmitsStone = Boolean(tile.properties.emitsStoneParticles);
@@ -174,13 +193,6 @@ class BaseLevel extends Phaser.Scene {
             .setOrigin(0.5, 0.5)
             .setCenterAlign()
             .setVisible(false);
-        
-        // debug key listener (assigned to D key)
-        this.input.keyboard.on('keydown-D', () => {
-            this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
-            this.physics.world.debugGraphic.clear()
-        }, this);
-        this.physics.world.drawDebug = false;
 
         // ----------------------------------------------
         // ------------------ Pickups -------------------
@@ -264,7 +276,7 @@ class BaseLevel extends Phaser.Scene {
     // teleports player to last checkpoint, and resets ability and key pickup progress
     loadLastCheckpoint() {
         if (PLAYER_ABILITIES.WORLD_IS_YELLOW != this.my.checkpointAbilityProgress.WORLD_IS_YELLOW) {
-            this.swapTerrainColor();
+            this.swapTerrainColor(false);
         }
         Object.assign(PLAYER_ABILITIES, this.my.checkpointAbilityProgress);
         // reactivate ability pickups
@@ -322,9 +334,11 @@ class BaseLevel extends Phaser.Scene {
         }
     }
     
-    swapTerrainColor() {
-        let detune = Math.random()*200 - 100;
-        this.sound.play('swap-color', {detune: detune});
+    swapTerrainColor(makeSound = true) {
+        if (makeSound) {
+            let detune = Math.random()*200 - 100;
+            this.sound.play('swap-color', {detune: detune});
+        }
         
         if (PLAYER_ABILITIES.WORLD_IS_YELLOW) {
             this.my.terrainLayer.forEachTile(this._swapTileToPink);

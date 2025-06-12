@@ -36,6 +36,10 @@ class OpenLevel extends BaseLevel {
         // after this first color swap, you can't swap colors until you unlock the ability
         this.firstColorSwapDone = false;
         this.input.keyboard.on('keydown', (event) => {
+            if (PLAYER_ABILITIES.COLOR_SWAP) {
+                // this is only ever true while debugging
+                this.firstColorSwapDone = true;
+            }
             if (!this.firstColorSwapDone && (event.key == 'c')) {
                 this.swapTerrainColor();
                 this.firstColorSwapDone = true;

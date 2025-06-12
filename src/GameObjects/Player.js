@@ -41,10 +41,13 @@ class Player extends Phaser.GameObjects.Sprite {
         this.lockedMovingRight = false;
         this.lockedMovingLeft = false;
 
-        this.dashReady = true;
+        this.dashReadyStage1 = true; // when this is turned on, dashReady particle effect starts
+        this.dashReadyStage2 = true; // when this is turned on, dash is actually ready
+        this.touchedGroundAfterDash = false;
         this.dashing = false;
         this.dashCooldownTimer = 0;
-        this.dashCooldownLength = 500;
+        this.dashCooldownStage1Length = 800;
+        this.dashCooldownStage2Length = 100;
         
         this.floorSoundsGrassy = false;
         this.floorEmitsStone = false;
@@ -91,7 +94,7 @@ class Player extends Phaser.GameObjects.Sprite {
 
         // dash particles
         let dashParticleConfig = {
-            frame: ['White-Small0', 'White-Large0'],
+            frame: ['White-Small0', 'White-Small0', 'White-Large0'],
             rotate: [0, 90, 180, 270],
             lifespan: {min: 300, max: 600},
             follow: this,
@@ -99,16 +102,34 @@ class Player extends Phaser.GameObjects.Sprite {
             speedX: {
                 onEmit: (particle) => {
                     // for some reason I can't do followOffset onEmit so I'm doing it here instead
-                    particle.x += Math.random()*4 - 2;
-                    particle.y += Math.random()*6 - 3;
+                    particle.x += Math.random() * 4 - 2;
+                    particle.y += (Math.pow(Math.random()-0.5, 3) * 4 + 0.5) * 8 - 4;
                     // still changing speedX though
                     return this.body.velocity.x * (-0.05);
                 }
             },
-            quantity: 2,
-            frequency: 5
+            quantity: 1,
+            frequency: 10
         };
         this.dashParticles = this.scene.add.particles(0, 0, 'particles', dashParticleConfig)
+            .stop();
+
+        // dash ready particles (communicates when dash is ready)
+        let dashReadyParticleZone = new Phaser.Geom.Circle(0, 0, 20);
+        let moveToUpdate = (particle, key) => (key === 'moveToX') ? this.x : this.y;
+        let dashReadyParticleConfig = {
+            frame: 'White-Small0',
+            follow: this,
+            emitZone: {
+                type: 'random',
+                source: dashReadyParticleZone
+            },
+            moveToX: {onUpdate: moveToUpdate},
+            moveToY: {onUpdate: moveToUpdate},
+            quantity: 15,
+            lifespan: {min: 100, max: 300}
+        };
+        this.dashReadyParticles = this.scene.add.particles(0, 0, 'particles', dashReadyParticleConfig)
             .stop();
     }
 
@@ -269,14 +290,23 @@ class Player extends Phaser.GameObjects.Sprite {
         }
 
         // detect if dash ready
+        if (this.body.blocked.down || this.slidingDownWall) {
+            this.touchedGroundAfterDash = true;
+        }
         this.dashCooldownTimer += delta;
-        if (this.dashCooldownTimer > this.dashCooldownLength && (this.body.blocked.down || this.slidingDownWall)) {
-            this.dashReady = true;
+        if (!this.dashReadyStage1 && this.dashCooldownTimer > this.dashCooldownStage1Length && this.touchedGroundAfterDash) {
+            this.dashReadyStage1 = true;
+            this.dashReadyParticles.explode();
+            setTimeout(() => {
+                this.dashReadyStage2 = true;
+            }, this.dashCooldownStage2Length);
         }
 
         // dashing
-        if (Phaser.Input.Keyboard.JustDown(this.xKey) && PLAYER_ABILITIES.DASH && this.dashReady && !this.slidingDownWall) {
-            this.dashReady = false;
+        if (Phaser.Input.Keyboard.JustDown(this.xKey) && PLAYER_ABILITIES.DASH && this.dashReadyStage2 && !this.slidingDownWall) {
+            this.dashReadyStage1 = false;
+            this.dashReadyStage2 = false;
+            this.touchedGroundAfterDash = false;
             this.dashCooldownTimer = 0;
             this.dashing = true;
             // cancel locked movement after walljump

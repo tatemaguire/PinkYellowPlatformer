@@ -306,6 +306,10 @@
    <property name="collides" type="bool" value="true"/>
    <property name="deadly" type="bool" value="true"/>
   </properties>
+  <objectgroup draworder="index" id="3">
+   <object id="4" x="0" y="0" width="8" height="8"/>
+   <object id="6" x="0" y="4.00749" width="8" height="3.99251"/>
+  </objectgroup>
  </tile>
  <tile id="76">
   <properties>

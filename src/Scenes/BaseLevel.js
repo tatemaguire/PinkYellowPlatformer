@@ -27,6 +27,11 @@ class BaseLevel extends Phaser.Scene {
         this.xKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
         this.cKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C);
 
+        // create false unused keybinds to stop the page from scrolling unexpectedly
+        this.upKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+        this.downKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+        this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+
         // make map layers
         this.my.map = this.add.tilemap(this.levelConfig.mapKey, 8, 8, this.levelConfig.width, this.levelConfig.height);
         this.my.tileset = this.my.map.addTilesetImage('Pico-8-Platformer', 'pico-8-platformer', 8, 8);

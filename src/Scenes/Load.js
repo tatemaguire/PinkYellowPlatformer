@@ -34,7 +34,7 @@ class Load extends Phaser.Scene {
     }
 
     create() {
-        this.scene.start('openLevel');
+        this.scene.start('title');
 
         this.anims.create({
             key: 'walk',

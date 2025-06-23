@@ -265,10 +265,19 @@ class BaseLevel extends Phaser.Scene {
             }
             this.physics.add.overlap(this.my.sprite.player, flag, callback);
         }
+
+        // ----------------------------------------------
+        // --------------- Ambient Sound ----------------
+        // ----------------------------------------------
+
+        this.my.ambience = this.sound.add('summerBreezeAmbience', {volume: 0.5, loop: true});
+        this.my.ambience.play();
     }
 
     saveCheckpoint(checkpoint, makeSound = false) {
-        if (checkpoint === this.my.currentCheckpoint) return;
+        if (checkpoint === this.my.currentCheckpoint) {
+            makeSound = false;
+        }
 
         if (makeSound) {
             this.sound.play('checkpoint', {volume: 0.5});

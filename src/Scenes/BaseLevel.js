@@ -9,12 +9,15 @@ class BaseLevel extends Phaser.Scene {
         this.my = {};
         this.my.sprite = {};
         this.my.collider = {};
-        this.my.score = 0;
+        this.saveState = {};
 
         this.sound.stopAll();
     }
     
     create() {
+        // track world color
+        this.worldIsYellow = true;
+
         // set up physics
         this.physics.world.gravity.y = 500;
         this.physics.world.TILE_BIAS = 8;
@@ -125,8 +128,8 @@ class BaseLevel extends Phaser.Scene {
 
         // create coin collision
         let playerCoinCollide = (player, coin) => {
-            PLAYER_STATS.COINS++;
-            this.my.coinText.setText(('000' + PLAYER_STATS.COINS).slice(-3));
+            this.my.sprite.player.coins++;
+            this.my.coinText.setText(('000' + this.my.sprite.player.coins).slice(-3));
             this.sound.play('get-coin');
             coin.destroy();
         }
@@ -275,22 +278,26 @@ class BaseLevel extends Phaser.Scene {
     }
 
     saveCheckpoint(checkpoint, makeSound = false) {
-        if (checkpoint === this.my.currentCheckpoint) {
+        if (checkpoint === this.saveState.checkpoint) {
             makeSound = false;
         }
-
         if (makeSound) {
             this.sound.play('checkpoint', {volume: 0.5});
         }
 
-        if (this.my.currentCheckpoint && this.my.currentCheckpoint.type === "Sprite") {
-            this.my.currentCheckpoint.setFrame(74); // set to plain flagpole
+        // change checkpoint sprites
+        if (this.saveState.checkpoint && this.saveState.checkpoint.type === "Sprite") {
+            this.saveState.checkpoint.setFrame(74); // set to plain flagpole
         }
         if (checkpoint.type === "Sprite") {
-            checkpoint.setFrame(73);
+            checkpoint.setFrame(73); // raise flag on new checkpoint
         }
-        this.my.currentCheckpoint = checkpoint;
-        Object.assign(this.my.checkpointAbilityProgress, PLAYER_ABILITIES);
+
+        // save new checkpoint
+        this.saveState.checkpoint = checkpoint;
+        this.saveState.worldIsYellow = this.worldIsYellow;
+        this.saveState.playerState = this.my.sprite.player.playerState;
+
         this.my.checkpointPickupProgress = [];
         for (let pickup of this.my.pickups) {
             this.my.checkpointPickupProgress.push(pickup.active);
@@ -299,10 +306,10 @@ class BaseLevel extends Phaser.Scene {
 
     // teleports player to last checkpoint, and resets ability and key pickup progress
     loadLastCheckpoint() {
-        if (PLAYER_ABILITIES.WORLD_IS_YELLOW != this.my.checkpointAbilityProgress.WORLD_IS_YELLOW) {
+        if (this.worldIsYellow != this.saveState.worldIsYellow) {
             this.swapTerrainColor(false);
         }
-        Object.assign(PLAYER_ABILITIES, this.my.checkpointAbilityProgress);
+
         // reactivate ability pickups
         let i = 0;
         for (let pickup of this.my.pickups) {
@@ -314,7 +321,9 @@ class BaseLevel extends Phaser.Scene {
             }
             i++;
         }
-        this.my.sprite.player.setPosition(this.my.currentCheckpoint.x, this.my.currentCheckpoint.y);
+
+        this.my.sprite.player.playerState = this.saveState.playerState;
+        this.my.sprite.player.setPosition(this.saveState.checkpoint.x, this.saveState.checkpoint.y);
     }
     
     restartLevel() {
@@ -364,17 +373,17 @@ class BaseLevel extends Phaser.Scene {
             this.sound.play('swap-color', {detune: detune});
         }
         
-        if (PLAYER_ABILITIES.WORLD_IS_YELLOW) {
+        if (this.worldIsYellow) {
             this.my.terrainLayer.forEachTile(this._swapTileToPink);
             this.yellowLeafEmitter.visible = false;
             this.pinkLeafEmitter.visible = true;
-            PLAYER_ABILITIES.WORLD_IS_YELLOW = false;
+            this.worldIsYellow = false;
         }
         else {
             this.my.terrainLayer.forEachTile(this._swapTileToYellow);
             this.yellowLeafEmitter.visible = true;
             this.pinkLeafEmitter.visible = false;
-            PLAYER_ABILITIES.WORLD_IS_YELLOW = true;
+            this.worldIsYellow = true;
         }
     }
     
@@ -382,7 +391,7 @@ class BaseLevel extends Phaser.Scene {
         this.my.sprite.player.update(time, delta);
 
         // swap colors when player presses X/C
-        if (PLAYER_ABILITIES.COLOR_SWAP && Phaser.Input.Keyboard.JustDown(this.cKey)) {
+        if (this.my.sprite.player.hasColorSwap && Phaser.Input.Keyboard.JustDown(this.cKey)) {
             this.swapTerrainColor();
         }
     }

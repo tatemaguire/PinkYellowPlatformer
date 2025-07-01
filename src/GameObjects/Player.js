@@ -24,6 +24,15 @@ class Player extends Phaser.GameObjects.Sprite {
         this.DASH_VELOCITY = 160;
         this.DASH_LENGTH = 24; // pixels
 
+        // Abilities
+        this.hasWallJump = false;
+        this.hasColorSwap = false;
+        this.hasDash = false;
+
+        // Key Inventory
+        this.keys = 0;
+        this.coins = 0;
+
         // set up physics
         this.body.setCollideWorldBounds();
         this.body.setMaxVelocityX(this.MAX_VELOCITY);
@@ -148,6 +157,22 @@ class Player extends Phaser.GameObjects.Sprite {
         });
     }
 
+    get playerState() {
+        return {
+            hasWallJump: this.hasWallJump,
+            hasColorSwap: this.hasColorSwap,
+            hasDash: this.hasDash,
+            keys: this.keys
+        };
+    }
+
+    set playerState(state) {
+        this.hasWallJump = state.hasWallJump;
+        this.hasColorSwap = state.hasColorSwap;
+        this.hasDash = state.hasDash;
+        this.keys = state.keys;
+    }
+
     update(time, delta) {
         if (this.dying) return;
 
@@ -204,7 +229,7 @@ class Player extends Phaser.GameObjects.Sprite {
         }
 
         // wall sliding
-        if (PLAYER_ABILITIES.WALL_JUMP && !this.body.blocked.down && (this.nextToLeftWall || this.nextToRightWall)) {
+        if (this.hasWallJump && !this.body.blocked.down && (this.nextToLeftWall || this.nextToRightWall)) {
             if (this.body.velocity.y > 0) {
                 this.slidingDownWall = true;
                 this.body.setMaxVelocityY(this.MAX_SLIDE_VELOCITY);
@@ -238,7 +263,7 @@ class Player extends Phaser.GameObjects.Sprite {
                 this.impactParticles.followOffset.x = 0;
                 this.impactParticles.explode(this.IMPACT_PARTICLE_COUNT);
             }
-            else if (PLAYER_ABILITIES.WALL_JUMP && this.nextToLeftWall) {
+            else if (this.hasWallJump && this.nextToLeftWall) {
                 // wall jump from left wall
                 this.body.setMaxVelocityY(this.TERMINAL_VELOCITY);
                 this.body.setVelocityX(this.MAX_VELOCITY);
@@ -247,7 +272,7 @@ class Player extends Phaser.GameObjects.Sprite {
                 this.impactParticles.followOffset.x = -4;
                 this.impactParticles.explode(this.IMPACT_PARTICLE_COUNT);
             }
-            else if (PLAYER_ABILITIES.WALL_JUMP && this.nextToRightWall) {
+            else if (this.hasWallJump && this.nextToRightWall) {
                 // wall jump from right wall
                 this.body.setMaxVelocityY(this.TERMINAL_VELOCITY);
                 this.body.setVelocityX(-this.MAX_VELOCITY);
@@ -304,7 +329,7 @@ class Player extends Phaser.GameObjects.Sprite {
         }
 
         // dashing
-        if (Phaser.Input.Keyboard.JustDown(this.xKey) && PLAYER_ABILITIES.DASH && this.dashReadyStage2 && !this.slidingDownWall) {
+        if (Phaser.Input.Keyboard.JustDown(this.xKey) && this.hasDash && this.dashReadyStage2 && !this.slidingDownWall) {
             this.dashReadyStage1 = false;
             this.dashReadyStage2 = false;
             this.touchedGroundAfterDash = false;

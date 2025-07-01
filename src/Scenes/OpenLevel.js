@@ -7,36 +7,36 @@ class OpenLevel extends BaseLevel {
         };
         let pickupConfig = {
             WallJumpPickup: {
-                function: () => {PLAYER_ABILITIES.WALL_JUMP = true;},
+                function: () => {this.my.sprite.player.hasWallJump = true;},
                 displayText: "Wall Jump"
             },
             ColorSwapPickup: {
-                function: () => {PLAYER_ABILITIES.COLOR_SWAP = true;},
+                function: () => {this.my.sprite.player.hasColorSwap = true;},
                 displayText: "Color Swap"
             },
             DashPickup: {
-                function: () => {PLAYER_ABILITIES.DASH = true;},
+                function: () => {this.my.sprite.player.hasDash = true;},
                 displayText: "Dash"
             },
-            Key1: {function: () => {PLAYER_ABILITIES.KEYS++;}},
-            Key2: {function: () => {PLAYER_ABILITIES.KEYS++;}},
-            Key3: {function: () => {PLAYER_ABILITIES.KEYS++;}}
+            Key1: {function: () => {this.my.sprite.player.keys++;}},
+            Key2: {function: () => {this.my.sprite.player.keys++;}},
+            Key3: {function: () => {this.my.sprite.player.keys++;}}
         }
         super('openLevel', levelConfig, pickupConfig);
     }
 
     create() {
-        PLAYER_ABILITIES.WALL_JUMP = false;
-        PLAYER_ABILITIES.COLOR_SWAP = false;
-        PLAYER_ABILITIES.DASH = false;
-
         super.create();
+
+        this.my.sprite.player.hasWallJump = false;
+        this.my.sprite.player.hasColorSwap = false;
+        this.my.sprite.player.hasDash = false;
 
         // first color swap at the beginning of the game that removes the yellow platform and drops you down
         // after this first color swap, you can't swap colors until you unlock the ability
         this.firstColorSwapDone = false;
         this.input.keyboard.on('keydown', (event) => {
-            if (PLAYER_ABILITIES.COLOR_SWAP) {
+            if (this.my.sprite.player.hasColorSwap) {
                 // this is only ever true while debugging
                 this.firstColorSwapDone = true;
             }
@@ -52,79 +52,77 @@ class OpenLevel extends BaseLevel {
         // ----------------------------------------------
         // ---------------- Coin Door -------------------
         // ----------------------------------------------
-
-        // door sounds
-        this.doorOpenSound = this.sound.add('doorOpen', {detune: -100});
-
+        
         // create coin door
-        this.my.coinDoorLayer = this.my.map.createLayer('Coin Door', this.my.tileset, 0, 0);
-        this.my.coinDoorLayer.setCollisionByProperty({collides: true});
-        this.my.collider.playerCoinDoor = this.physics.add.collider(this.my.sprite.player, this.my.coinDoorLayer);
-
+        let coinDoorLayer = this.my.map.createLayer('Coin Door', this.my.tileset, 0, 0);
+        
         // coin door lock
-        this.my.sprite.coinLock = this.my.map.createFromObjects('Objects', {name: 'CoinLock'}, true)[0];
-        let coinDoorPrice = this.my.sprite.coinLock.data.get('price');
-
+        let coinLock = this.my.map.createFromObjects('Objects', {name: 'CoinLock'}, true)[0];
+        let coinDoorPrice = coinLock.data.get('price');
+        
         // coin door lock text
-        this.my.coinLockText = this.add.bitmapText(this.my.sprite.coinLock.x - 36, this.my.sprite.coinLock.y - 21, 'mini-square-mono', coinDoorPrice)
+        let coinLockText = this.add.bitmapText(coinLock.x - 36, coinLock.y - 21, 'mini-square-mono', coinDoorPrice)
             .setFontSize(16)
             .setLetterSpacing(0);
 
-        // coin door trig
-        let trigRect = this.my.map.findObject('Objects', (obj) => obj.name == 'CoinDoorTrig');
-        this.my.coinDoorTrigBody = this.physics.add.staticBody(trigRect.x, trigRect.y, trigRect.width, trigRect.height);
-        let coinDoorTrigOverlapProcess = () => {
-            if (PLAYER_STATS.COINS >= coinDoorPrice) {
-                this.doorOpenSound.play();
-                this.my.sprite.coinLock.destroy();
-                this.my.coinLockText.destroy();
-                this.my.coinDoorLayer.setVisible(false);
-                this.my.collider.playerCoinDoor.active = false;
-                this.my.collider.coinDoorTrigOverlap.active = false;
-            }
-        }
-        this.my.collider.coinDoorTrigOverlap = this.physics.add.overlap(this.my.sprite.player, this.my.coinDoorTrigBody, coinDoorTrigOverlapProcess);
+        let coinLocks = [{
+            lockSprite: coinLock,
+            lockText: coinLockText,
+            condition: () => {return this.my.sprite.player.coins >= coinDoorPrice;}
+        }]
+        this.coinDoor = new Door(this, this.my.sprite.player, coinDoorLayer, coinLocks);
 
         // ----------------------------------------------
         // ----------------- Key Door -------------------
         // ----------------------------------------------
 
         // key door
-        this.my.keyDoorLayer = this.my.map.createLayer('Key Door', this.my.tileset, 0, 0);
-        this.my.keyDoorLayer.setCollisionByProperty({collides: true});
-        this.my.collider.playerKeyDoor = this.physics.add.collider(this.my.sprite.player, this.my.keyDoorLayer);
+        let keyDoorLayer = this.my.map.createLayer('Key Door', this.my.tileset, 0, 0);
 
         // key locks
-        this.my.sprite.keyLock1 = this.my.map.createFromObjects('Objects', {name: 'KeyLock1'}, true)[0];
-        this.my.sprite.keyLock2 = this.my.map.createFromObjects('Objects', {name: 'KeyLock2'}, true)[0];
-        this.my.sprite.keyLock3 = this.my.map.createFromObjects('Objects', {name: 'KeyLock3'}, true)[0];
+        let keyLockSprites = this.my.map.createFromObjects('Objects', {name: 'KeyLock'}, true);
 
-        // key door trig
-        trigRect = this.my.map.findObject('Objects', (obj) => obj.name == 'KeyDoorTrig');
-        this.my.keyDoorTrigBody = this.physics.add.staticBody(trigRect.x, trigRect.y, trigRect.width, trigRect.height);
-        let keyDoorTrigOverlapProcess = () => {
-            if (PLAYER_ABILITIES.KEYS >= 1) {
-                this.my.sprite.keyLock1.destroy();
+        let keyLockCondition = () => {
+            if (this.my.sprite.player.keys > 0) {
+                this.my.sprite.player.keys--;
+                return true;
             }
-            if (PLAYER_ABILITIES.KEYS >= 2) {
-                this.my.sprite.keyLock2.destroy();
-            }
-            if (PLAYER_ABILITIES.KEYS >= 3) {
-                this.doorOpenSound.play();
-                this.my.sprite.keyLock3.destroy();
-                this.my.keyDoorLayer.setVisible(false);
-                this.my.collider.playerKeyDoor.active = false;
-                this.my.collider.keyDoorTrigOverlap.active = false;
-            }
+            return false;
         }
-        this.my.collider.keyDoorTrigOverlap = this.physics.add.overlap(this.my.sprite.player, this.my.keyDoorTrigBody, keyDoorTrigOverlapProcess);
+        let keyLocks = [
+            {lockSprite: keyLockSprites[0], condition: keyLockCondition},
+            {lockSprite: keyLockSprites[1], condition: keyLockCondition},
+            {lockSprite: keyLockSprites[2], condition: keyLockCondition}
+        ]
+
+        this.keyDoor = new Door(this, this.my.sprite.player, keyDoorLayer, keyLocks);
+
+        this.saveCheckpoint(this.saveState.checkpoint); // resave with doors
+    }
+
+    saveCheckpoint(checkpoint, makeSound = false) {
+        super.saveCheckpoint(checkpoint, makeSound);
+        if (this.coinDoor) {
+            this.saveState.coinDoorState = this.coinDoor.doorState;
+        }
+        if (this.keyDoor) {
+            this.saveState.keyDoorState = this.keyDoor.doorState;
+        }
     }
 
     loadLastCheckpoint() {
-        if (this.my.currentCheckpoint.type !== "Sprite") {
+        // if the player dies before reaching a checkpoint, reset firstColorSwap tracker
+        if (this.saveState.checkpoint.type !== "Sprite") {
             this.firstColorSwapDone = false;
         }
+
         super.loadLastCheckpoint();
+        if (this.saveState.coinDoorState) {
+            this.coinDoor.doorState = this.saveState.coinDoorState;
+        }
+        if (this.saveState.keyDoorState) {
+            this.keyDoor.doorState = this.saveState.keyDoorState;
+        }
     }
 
     update(time, delta) {

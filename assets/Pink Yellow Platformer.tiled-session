@@ -54,11 +54,11 @@
             "expandedObjectLayers": [
                 6
             ],
-            "scale": 1.5402,
+            "scale": 1.2589,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 575.8992338657317,
-                "y": 577.5223996883522
+                "x": 413.85336404797846,
+                "y": 517.5152911271746
             }
         }
     },
@@ -76,7 +76,7 @@
         "Pico-8-Platformer.tsx"
     ],
     "project": "Pink Yellow Platformer.tiled-project",
-    "property.type": "int",
+    "property.type": "bool",
     "recentFiles": [
         "Pico-8-Platformer.tsx",
         "openLevel.tmx",

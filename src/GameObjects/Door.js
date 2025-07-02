@@ -1,13 +1,30 @@
 class Door {
-    constructor(scene, playerSprite, doorLayer, locks) {
+    constructor(scene, doorLayerName, lockName, unlockCondition, lockText = null) {
         this.scene = scene;
-        this.playerSprite = playerSprite;
-        this.doorLayer = doorLayer;
-        this.locks = locks;
-
-        // Set up doorLayer collider
+        this.playerSprite = this.scene.my.sprite.player;
+        
+        // Set up doorLayer and collider
+        this.doorLayer = this.scene.my.map.createLayer(doorLayerName, this.scene.my.tileset, 0, 0);
         this.doorLayer.setCollisionByProperty({collides: true});
         this.playerDoorCollider = this.scene.physics.add.collider(this.playerSprite, this.doorLayer);
+
+        // create lock objects
+        let lockSprites = this.scene.my.map.createFromObjects('Objects', {name: lockName}, true);
+        this.locks = [];
+        for (let sprite of lockSprites) {
+            let lock = {lockSprite: sprite, condition: unlockCondition};
+            
+            this.locks.push(lock);
+        }
+
+        // create text label if that parameter is given
+        this.lockText = null;
+        if (lockText) {
+                let lockTextObject = this.scene.add.bitmapText(lockSprites[0].x - 36, lockSprites[0].y - 21, 'mini-square-mono', lockText)
+                    .setFontSize(16)
+                    .setLetterSpacing(0);
+                this.lockText = lockTextObject;
+            }
 
         // Set up lock overlap colliders and states
         this.lockOverlaps = [];
@@ -17,7 +34,7 @@ class Door {
             this.lockStates.push(lock.lockSprite.active);
             this.scene.physics.add.existing(lock.lockSprite, 1);
             let callback = () => {
-                if (lock.condition()) {
+                if (unlockCondition()) {
                     // If condition is met, change lock state and update
                     let index = this.locks.indexOf(lock);
                     this.lockStates[index] = false;

@@ -347,4 +347,10 @@
    <property name="yellowVisual" type="bool" value="true"/>
   </properties>
  </tile>
+ <tile id="145">
+  <properties>
+   <property name="collides" type="bool" value="true"/>
+   <property name="invisible" type="bool" value="true"/>
+  </properties>
+ </tile>
 </tileset>

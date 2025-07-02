@@ -53,51 +53,51 @@ class OpenLevel extends BaseLevel {
         // ---------------- Coin Door -------------------
         // ----------------------------------------------
         
-        // create coin door
-        let coinDoorLayer = this.my.map.createLayer('Coin Door', this.my.tileset, 0, 0);
-        
-        // coin door lock
-        let coinLock = this.my.map.createFromObjects('Objects', {name: 'CoinLock'}, true)[0];
-        let coinDoorPrice = coinLock.data.get('price');
-        
-        // coin door lock text
-        let coinLockText = this.add.bitmapText(coinLock.x - 36, coinLock.y - 21, 'mini-square-mono', coinDoorPrice)
-            .setFontSize(16)
-            .setLetterSpacing(0);
+        // get the coin door price
+        let coinLockObject = this.my.map.findObject('Objects', (obj) => obj.name === 'CoinLock');
+        let coinDoorPrice = null;
+        for (let prop of coinLockObject.properties) {
+            if (prop.name === 'coinPrice') {
+                coinDoorPrice = prop.value;
+            }
+        }
 
-        let coinLocks = [{
-            lockSprite: coinLock,
-            lockText: coinLockText,
-            condition: () => {return this.my.sprite.player.coins >= coinDoorPrice;}
-        }]
-        this.coinDoor = new Door(this, this.my.sprite.player, coinDoorLayer, coinLocks);
+        let coinUnlockCondition = () => {
+            return this.my.sprite.player.coins >= coinDoorPrice;
+        }
+        this.coinDoor = new Door(this, 'Coin Door', 'CoinLock', coinUnlockCondition, coinDoorPrice);
 
         // ----------------------------------------------
         // ----------------- Key Door -------------------
         // ----------------------------------------------
 
-        // key door
-        let keyDoorLayer = this.my.map.createLayer('Key Door', this.my.tileset, 0, 0);
-
-        // key locks
-        let keyLockSprites = this.my.map.createFromObjects('Objects', {name: 'KeyLock'}, true);
-
-        let keyLockCondition = () => {
+        let keyUnlockCondition = () => {
             if (this.my.sprite.player.keys > 0) {
                 this.my.sprite.player.keys--;
                 return true;
             }
             return false;
         }
-        let keyLocks = [
-            {lockSprite: keyLockSprites[0], condition: keyLockCondition},
-            {lockSprite: keyLockSprites[1], condition: keyLockCondition},
-            {lockSprite: keyLockSprites[2], condition: keyLockCondition}
-        ]
-
-        this.keyDoor = new Door(this, this.my.sprite.player, keyDoorLayer, keyLocks);
+        this.keyDoor = new Door(this, 'Key Door', 'KeyLock', keyUnlockCondition);
 
         this.saveCheckpoint(this.saveState.checkpoint); // resave with doors
+
+        // ----------------------------------------------
+        // ------------------ Godrays -------------------
+        // ----------------------------------------------
+
+        this.godrays = this.my.map.filterObjects('Objects', (obj) => obj.name === 'Godray');
+        console.log(this.godrays);
+        let points = this.godrays[0].polygon;
+        this.graphics = this.add.graphics({
+            x: this.godrays[0].x,
+            y: this.godrays[0].y,
+            fillStyle: {
+                color: 0xFFFFFF,
+                alpha: 0.2
+            }
+        });
+        this.graphics.fillPoints(points, true);
     }
 
     saveCheckpoint(checkpoint, makeSound = false) {

@@ -79,6 +79,7 @@ class BaseLevel extends Phaser.Scene {
         this.my.terrainLayer.setCollisionByProperty({collidesYellowOnly: true});
         this.my.terrainLayer.forEachTile((tile) => {
             if (tile.properties.collidesPinkOnly) tile.setAlpha(0);
+            if (tile.properties.invisible) tile.setAlpha(0);
         });
 
         // create player/terrain collider

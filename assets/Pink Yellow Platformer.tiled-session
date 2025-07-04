@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "openLevel.tmx",
+    "activeFile": "",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
@@ -54,11 +54,11 @@
             "expandedObjectLayers": [
                 6
             ],
-            "scale": 1.2589,
+            "scale": 1.5081,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 413.85336404797846,
-                "y": 517.5152911271746
+                "x": 511.23930773821365,
+                "y": 488.3628406604337
             }
         }
     },
@@ -72,8 +72,6 @@
     "map.tileWidth": 8,
     "map.width": 90,
     "openFiles": [
-        "openLevel.tmx",
-        "Pico-8-Platformer.tsx"
     ],
     "project": "Pink Yellow Platformer.tiled-project",
     "property.type": "bool",

@@ -87,7 +87,6 @@ class OpenLevel extends BaseLevel {
         // ----------------------------------------------
 
         this.godrays = this.my.map.filterObjects('Objects', (obj) => obj.name === 'Godray');
-        console.log(this.godrays);
         let points = this.godrays[0].polygon;
         this.graphics = this.add.graphics({
             x: this.godrays[0].x,

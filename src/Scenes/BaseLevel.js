@@ -85,18 +85,21 @@ class BaseLevel extends Phaser.Scene {
         // create player/terrain collider
         let playerTileCollide = (player, tile) => {
             if (tile.properties.deadly) {
-                // get the tiles under the player
-                let leftStandingOn = this.my.terrainLayer.getTileAtWorldXY(player.x - player.displayWidth/2-1, player.y + player.displayHeight/2);
-                let rightStandingOn = this.my.terrainLayer.getTileAtWorldXY(player.x + player.displayWidth/2+1, player.y + player.displayHeight/2);
-                // if player is standing on 'tile', then we have to figure out if they are fully standing on it
-                if (leftStandingOn === tile || rightStandingOn === tile) {
-                    // the player only dies if they're fully on a deadly tile
-                    if ((!leftStandingOn || leftStandingOn.properties.deadly) && (!rightStandingOn || rightStandingOn.properties.deadly)) {
-                        this.my.sprite.player.kill();
+                let kill_player = true
+                let dy = player.y + player.displayHeight/2 - tile.pixelY
+                // console.log(dy)
+                if (dy == 0) {
+                    // the tile is directly under the player
+                    // so lets check what the player is standing on
+                    let Adjacent = this.my.terrainLayer.getTileAtWorldXY(player.x - player.displayWidth/2, player.y + player.displayHeight/2);
+                    let Bdjacent = this.my.terrainLayer.getTileAtWorldXY(player.x + player.displayWidth/2, player.y + player.displayHeight/2);
+                    // if either tile is not deadly, the player is safe
+                    if ((Adjacent && !Adjacent.properties.deadly) || (Bdjacent && !Bdjacent.properties.deadly)) {
+                        kill_player = false
                     }
                 }
-                else {
-                    // the player isn't standing on 'tile', so they're colliding with a deadly tile elsewhere -- kill them
+
+                if (kill_player) {
                     this.my.sprite.player.kill();
                 }
             }

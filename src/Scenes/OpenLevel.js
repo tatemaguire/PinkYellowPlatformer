@@ -28,23 +28,25 @@ class OpenLevel extends BaseLevel {
     create() {
         super.create();
 
+        super.swapTerrainColor(false);
+
         this.my.sprite.player.hasWallJump = false;
         this.my.sprite.player.hasColorSwap = false;
         this.my.sprite.player.hasDash = false;
 
         // first color swap at the beginning of the game that removes the yellow platform and drops you down
         // after this first color swap, you can't swap colors until you unlock the ability
-        this.firstColorSwapDone = false;
-        this.input.keyboard.on('keydown', (event) => {
-            if (this.my.sprite.player.hasColorSwap) {
-                // this is only ever true while debugging
-                this.firstColorSwapDone = true;
-            }
-            if (!this.firstColorSwapDone && (event.key == 'c')) {
-                this.swapTerrainColor();
-                this.firstColorSwapDone = true;
-            }
-        });
+        // this.firstColorSwapDone = false;
+        // this.input.keyboard.on('keydown', (event) => {
+        //     if (this.my.sprite.player.hasColorSwap) {
+        //         // this is only ever true while debugging
+        //         this.firstColorSwapDone = true;
+        //     }
+        //     if (!this.firstColorSwapDone && (event.key == 'c')) {
+        //         this.swapTerrainColor();
+        //         this.firstColorSwapDone = true;
+        //     }
+        // });
 
         // Remove camera follow, we control scroll in update
         this.cameras.main.stopFollow();
@@ -111,9 +113,9 @@ class OpenLevel extends BaseLevel {
 
     loadLastCheckpoint() {
         // if the player dies before reaching a checkpoint, reset firstColorSwap tracker
-        if (this.saveState.checkpoint.type !== "Sprite") {
-            this.firstColorSwapDone = false;
-        }
+        // if (this.saveState.checkpoint.type !== "Sprite") {
+        //     this.firstColorSwapDone = false;
+        // }
 
         super.loadLastCheckpoint();
         if (this.saveState.coinDoorState) {

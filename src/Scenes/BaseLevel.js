@@ -45,10 +45,10 @@ class BaseLevel extends Phaser.Scene {
         this.my.terrainLayer = this.my.map.createLayer('Terrain', this.my.tileset, 0, 0);
 
         // debug key listener (assigned to D key)
-        this.input.keyboard.on('keydown-D', () => {
-            this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
-            this.physics.world.debugGraphic.clear()
-        }, this);
+        // this.input.keyboard.on('keydown-D', () => {
+        //     this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
+        //     this.physics.world.debugGraphic.clear()
+        // }, this);
         this.physics.world.drawDebug = false;
 
         // press R to restart

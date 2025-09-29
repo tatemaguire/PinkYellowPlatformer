@@ -4,7 +4,7 @@ class Title extends Phaser.Scene {
     }
 
     create() {
-        this.add.sprite(0, 0, 'feldsparTitlescreen').setOrigin(0, 0);
+        this.add.sprite(0, 0, 'titlescreen').setOrigin(0, 0);
 
         this.input.keyboard.on('keydown-Z', () => {
             this.scene.start('openLevel');

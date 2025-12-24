@@ -29,6 +29,7 @@ class BaseLevel extends Phaser.Scene {
         this.zKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
         this.xKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
         this.cKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C);
+        this.rKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
 
         // create false unused keybinds to stop the page from scrolling unexpectedly
         this.upKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -338,9 +339,6 @@ class BaseLevel extends Phaser.Scene {
     finishLevel() {
         this.my.winText.setVisible(true);
         this.physics.pause();
-        this.input.keyboard.on('keydown', (event) => {
-            if (event.key === 'z') this.restartLevel();
-        });
     }
     
     _swapTileToYellow(tile) {
@@ -410,6 +408,10 @@ class BaseLevel extends Phaser.Scene {
     
     update(time, delta) {
         this.my.sprite.player.update(time, delta);
+
+        if (this.rKey.isDown) {
+            this.restartLevel();
+        }
 
         // swap colors when player presses X/C
         if (this.my.sprite.player.hasColorSwap && Phaser.Input.Keyboard.JustDown(this.cKey)) {

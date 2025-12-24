@@ -63,7 +63,7 @@ class BaseLevel extends Phaser.Scene {
         // create player
         this.my.playerSpawn = this.my.map.findObject('Objects', (obj) => obj.name == 'PlayerSpawn');
         this.my.sprite.player = new Player(this, this.my.playerSpawn.x+4, this.my.playerSpawn.y+4, this.leftKey, this.rightKey, this.zKey, this.xKey);
-        
+
         // set up camera
         this.cameras.main.startFollow(this.my.sprite.player, true, 0.15, 0.10, 0, 16);
         this.cameras.main.setBounds(0, 0, this.my.map.widthInPixels, this.my.map.heightInPixels);
@@ -200,14 +200,15 @@ class BaseLevel extends Phaser.Scene {
             .setScrollFactor(0);
         
         // create game win text
-        this.my.winText = this.add.bitmapText(game.config.width/2, game.config.height/2-8, 'mini-square-mono', 'LEVEL COMPLETE')
+        this.my.winText = this.add.bitmapText(game.config.width/2, game.config.height/2-8, 'mini-square-mono', 'GAME COMPLETE')
             .setFontSize(32)
             .setLetterSpacing(0)
             .setScrollFactor(0)
             .setMaxWidth(game.config.width)
             .setOrigin(0.5, 0.5)
             .setCenterAlign()
-            .setVisible(false);
+            .setVisible(false)
+            .setDropShadow(2, 2, "black", 1);
 
         // ----------------------------------------------
         // ------------------ Pickups -------------------

@@ -16,7 +16,6 @@ class Load extends Phaser.Scene {
         this.load.bitmapFont('mini-square-mono', 'fonts/Kenney-Mini-Square-Mono.png', 'fonts/Kenney-Mini-Square-Mono.xml');
 
         this.load.image('titlescreen', 'sprites/titleScreen.png');
-        this.load.image('feldsparTitlescreen', 'sprites/feldsparTitleScreen.png');
 
         this.load.setPath('./assets/audio/bitcrushed/');
         this.load.audio('player-death', 'death.wav');
@@ -30,7 +29,7 @@ class Load extends Phaser.Scene {
         this.load.audio('summerBreezeAmbience', 'summerBreezeAmbience.wav');
         this.load.audio('dash', 'dash.wav');
         this.load.audio('dashReady', 'dashReady.wav');
-        this.load.audio('pickup', 'pickup2.wav');
+        this.load.audio('pickup', 'pickup.wav');
         this.load.audio('checkpoint', 'checkpoint.wav');
         this.load.audio('doorOpen', 'doorOpen.wav');
     }

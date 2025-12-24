@@ -371,6 +371,20 @@ class BaseLevel extends Phaser.Scene {
             tile.setAlpha(1);
         }
     }
+
+    _checkPlayerInsideYellow() {
+        const tile = this.my.terrainLayer.getTileAtWorldXY(this.my.sprite.player.x, this.my.sprite.player.y);
+        if (tile && tile.properties.collidesYellowOnly) {
+            this.my.sprite.player.kill();
+        }
+    }
+    
+    _checkPlayerInsidePink() {
+        const tile = this.my.terrainLayer.getTileAtWorldXY(this.my.sprite.player.x, this.my.sprite.player.y);
+        if (tile && tile.properties.collidesPinkOnly) {
+            this.my.sprite.player.kill();
+        }
+    }
     
     swapTerrainColor(makeSound = true) {
         if (makeSound) {
@@ -383,12 +397,14 @@ class BaseLevel extends Phaser.Scene {
             this.yellowLeafEmitter.visible = false;
             this.pinkLeafEmitter.visible = true;
             this.worldIsYellow = false;
+            this._checkPlayerInsidePink();
         }
         else {
             this.my.terrainLayer.forEachTile(this._swapTileToYellow);
             this.yellowLeafEmitter.visible = true;
             this.pinkLeafEmitter.visible = false;
             this.worldIsYellow = true;
+            this._checkPlayerInsideYellow();
         }
     }
     

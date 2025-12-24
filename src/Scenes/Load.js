@@ -32,6 +32,7 @@ class Load extends Phaser.Scene {
         this.load.audio('pickup', 'pickup.wav');
         this.load.audio('checkpoint', 'checkpoint.wav');
         this.load.audio('doorOpen', 'doorOpen.wav');
+        this.load.audio('unlock', 'unlock.wav');
     }
 
     create() {

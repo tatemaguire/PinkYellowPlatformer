@@ -39,6 +39,7 @@ class Door {
                     let index = this.locks.indexOf(lock);
                     this.lockStates[index] = false;
                     this._updateState();
+                    this.scene.sound.play('unlock', {volume: 1});
                 }
             }
             let overlap = this.scene.physics.add.overlap(this.playerSprite, lock.lockSprite, callback);

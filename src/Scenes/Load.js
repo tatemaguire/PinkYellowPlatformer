@@ -17,22 +17,23 @@ class Load extends Phaser.Scene {
 
         this.load.image('titlescreen', 'sprites/titleScreen.png');
 
+        // AUDIO
         this.load.setPath('./assets/audio/bitcrushed/');
-        this.load.audio('player-death', 'death.wav');
-        this.load.audio('swap-color', 'swapColor.wav');
-        this.load.audio('get-coin', 'getCoin.wav');
-        this.load.audio('jump', 'jump.wav');
-        this.load.audio('grassFootsteps', 'grassFootsteps.wav');
-        this.load.audio('stoneFootsteps', 'stoneFootsteps.wav');
+        this.load.audio('player-death', 'death.ogg');
+        this.load.audio('swap-color', 'swapColor.ogg');
+        this.load.audio('get-coin', 'getCoin.ogg');
+        this.load.audio('jump', 'jump.ogg');
+        this.load.audio('grassFootsteps', 'grassFootsteps.ogg');
+        this.load.audio('stoneFootsteps', 'stoneFootsteps.ogg');
 
         this.load.setPath('./assets/audio');
-        this.load.audio('summerBreezeAmbience', 'summerBreezeAmbience.wav');
-        this.load.audio('dash', 'dash.wav');
-        this.load.audio('dashReady', 'dashReady.wav');
-        this.load.audio('pickup', 'pickup.wav');
-        this.load.audio('checkpoint', 'checkpoint.wav');
-        this.load.audio('doorOpen', 'doorOpen.wav');
-        this.load.audio('unlock', 'unlock.wav');
+        this.load.audio('summerBreezeAmbience', 'summerBreezeAmbience.ogg');
+        this.load.audio('dash', 'dash.ogg');
+        this.load.audio('dashReady', 'dashReady.ogg');
+        this.load.audio('pickup', 'pickup.ogg');
+        this.load.audio('checkpoint', 'checkpoint.ogg');
+        this.load.audio('doorOpen', 'doorOpen.ogg');
+        this.load.audio('unlock', 'unlock.ogg');
     }
 
     create() {

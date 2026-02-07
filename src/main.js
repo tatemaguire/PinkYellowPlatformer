@@ -32,7 +32,7 @@ let config = {
     },
     width: 240,
     height: 160,
-    zoom: 6,
+    zoom: 2,
     scene: [Load, Title, Level1, OpenLevel]
 }
 

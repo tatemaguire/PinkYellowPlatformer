@@ -30,25 +30,6 @@ class OpenLevel extends BaseLevel {
 
         super.swapTerrainColor(false);
 
-        this.my.sprite.player.hasWallJump = true;
-        this.my.sprite.player.hasColorSwap = true;
-        this.my.sprite.player.hasDash = true;
-        this.my.sprite.player.keys = 3;
-
-        // first color swap at the beginning of the game that removes the yellow platform and drops you down
-        // after this first color swap, you can't swap colors until you unlock the ability
-        // this.firstColorSwapDone = false;
-        // this.input.keyboard.on('keydown', (event) => {
-        //     if (this.my.sprite.player.hasColorSwap) {
-        //         // this is only ever true while debugging
-        //         this.firstColorSwapDone = true;
-        //     }
-        //     if (!this.firstColorSwapDone && (event.key == 'c')) {
-        //         this.swapTerrainColor();
-        //         this.firstColorSwapDone = true;
-        //     }
-        // });
-
         // Remove camera follow, we control scroll in update
         this.cameras.main.stopFollow();
 

@@ -75,5 +75,6 @@ class Door {
         // If any locks are active, the door is active
         this.doorLayer.visible = doorActive;
         this.playerDoorCollider.active = doorActive;
+        if (this.lockText) this.lockText.visible = doorActive;
     }
 }

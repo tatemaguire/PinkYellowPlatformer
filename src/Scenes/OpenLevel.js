@@ -30,6 +30,11 @@ class OpenLevel extends BaseLevel {
 
         super.swapTerrainColor(false);
 
+        // this.my.sprite.player.hasDash = true;
+        // this.my.sprite.player.hasColorSwap = true;
+        // this.my.sprite.player.hasWallJump = true;
+        // this.my.sprite.player.keys = 3;
+
         // Remove camera follow, we control scroll in update
         this.cameras.main.stopFollow();
 
